@@ -1,0 +1,20 @@
+{
+  "name": "HabiTools - All-in-One Utilities",
+  "short_name": "HabiTools",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea580c",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/wrench--v1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/wrench--v1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
