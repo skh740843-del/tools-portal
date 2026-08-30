@@ -1,4 +1,9 @@
 const toolsData = [
+  // Image & Media Utilities
+  { id: "img_resizer", name: "Image Resizer", cat: "Text & Media", icon: "fa-image", desc: "Resize image dimensions directly in browser", render: renderImgResizer },
+  { id: "img_to_b64", name: "Image to Base64", cat: "Text & Media", icon: "fa-file-image", desc: "Convert images to Base64 data URI", render: renderImgToBase64 },
+  { id: "color_picker", name: "HEX to RGB Color Tool", cat: "Text & Media", icon: "fa-palette", desc: "Convert HEX, RGB, and view color codes", render: renderColorPicker },
+
   // Social & SEO Marketing
   { id: "meta_gen", name: "SEO Meta Tag Generator", cat: "Text & Media", icon: "fa-tags", desc: "Generate OpenGraph, SEO & Twitter card meta tags", render: renderMetaGen },
   { id: "robots_gen", name: "Robots.txt Generator", cat: "Text & Media", icon: "fa-robot", desc: "Create search engine crawler rules for websites", render: renderRobotsGen },
@@ -16,7 +21,7 @@ const toolsData = [
   { id: "gst_calc", name: "GST Calculator", cat: "Finance & Tax", icon: "fa-percent", desc: "Calculate inclusive/exclusive GST", render: renderGstCalc },
   { id: "disc_calc", name: "Discount Calculator", cat: "Finance & Tax", icon: "fa-tags", desc: "Calculate discount and savings", render: renderDiscountCalc },
 
-  // Calculators, Health & Fitness
+  // Calculators & Health
   { id: "calorie_calc", name: "Daily Calorie (TDEE)", cat: "Calculators", icon: "fa-fire", desc: "Calculate daily calories to lose/maintain weight", render: renderCalorieCalc },
   { id: "bmr_calc", name: "BMR Calculator", cat: "Calculators", icon: "fa-heart-pulse", desc: "Basal Metabolic Rate calories burned at rest", render: renderBmrCalc },
   { id: "water_calc", name: "Daily Water Intake", cat: "Calculators", icon: "fa-bottle-water", desc: "Daily recommended water intake based on weight", render: renderWaterCalc },
@@ -33,7 +38,7 @@ const toolsData = [
   { id: "data_conv", name: "Data Storage Converter", cat: "Calculators", icon: "fa-hard-drive", desc: "Convert MB, GB, TB, KB, Bytes", render: renderDataConv },
   { id: "unit_conv", name: "Length Converter", cat: "Calculators", icon: "fa-ruler-combined", desc: "Convert meters, feet, inches, km", render: renderUnitConv },
 
-  // Text & Content Utilities
+  // Text & Daily Utilities
   { id: "word_count", name: "Word Counter", cat: "Text & Media", icon: "fa-file-lines", desc: "Count words, characters, reading time", render: renderWordCounter },
   { id: "case_conv", name: "Case Converter", cat: "Text & Media", icon: "fa-font", desc: "UPPERCASE, lowercase, Title Case", render: renderCaseConv },
   { id: "dup_remover", name: "Remove Duplicate Lines", cat: "Text & Media", icon: "fa-filter", desc: "Filter out repeating text & list items", render: renderDupRemover },
@@ -43,80 +48,135 @@ const toolsData = [
   { id: "pdf_gen", name: "Text to PDF Export", cat: "Text & Media", icon: "fa-file-pdf", desc: "Export formatted notes directly into PDF", render: renderPdfMaker }
 ];
 
-// === 1. SOCIAL & SEO ENGINES ===
+// === IMAGE & MEDIA ENGINES ===
 
+function renderImgResizer(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="file" id="imgUpload" accept="image/*" class="text-xs">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>New Width (px)</label><input type="number" id="imgW" value="500"></div>
+        <div><label>New Height (px)</label><input type="number" id="imgH" value="500"></div>
+      </div>
+      <button onclick="resizeImage()">Resize & Download</button>
+      <canvas id="resCanvas" class="hidden"></canvas>
+    </div>
+  `;
+}
+window.resizeImage = () => {
+  const f = document.getElementById('imgUpload').files[0];
+  const w = parseInt(document.getElementById('imgW').value);
+  const h = parseInt(document.getElementById('imgH').value);
+  if (!f || !w || !h) return alert('Select image & enter valid dimensions');
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.getElementById('resCanvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const link = document.createElement('a');
+      link.download = `resized_${w}x${h}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(f);
+};
+
+function renderImgToBase64(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="file" id="b64File" accept="image/*" class="text-xs" onchange="runImgToBase64()">
+      <textarea id="b64Out" readonly placeholder="Base64 Data URI output..." class="h-28 font-mono text-[10px] select-all"></textarea>
+    </div>
+  `;
+}
+window.runImgToBase64 = () => {
+  const f = document.getElementById('b64File').files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => document.getElementById('b64Out').value = e.target.result;
+  reader.readAsDataURL(f);
+};
+
+function renderColorPicker(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="flex items-center gap-3">
+        <input type="color" id="clrPick" value="#ea580c" oninput="runColor(this.value)" class="w-14 h-10 border-0 p-0 rounded-xl cursor-pointer">
+        <input type="text" id="clrHex" value="#ea580c" oninput="runColor(this.value)" class="font-mono">
+      </div>
+      <div id="clrInfo" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1 font-mono"></div>
+    </div>
+  `;
+  setTimeout(() => runColor('#ea580c'), 50);
+}
+window.runColor = (hex) => {
+  if (!hex.startsWith('#')) hex = '#' + hex;
+  document.getElementById('clrPick').value = hex;
+  document.getElementById('clrHex').value = hex;
+  let c = hex.substring(1);
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  if (isNaN(num)) return;
+  const r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+  document.getElementById('clrInfo').innerHTML = `
+    <div>HEX: <b>${hex.toUpperCase()}</b></div>
+    <div>RGB: <b>rgb(${r}, ${g}, ${b})</b></div>
+    <div>CSS: <b>rgb(${r} ${g} ${b})</b></div>
+  `;
+};
 function renderMetaGen(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <div><label>Site / Page Title</label><input type="text" id="metaT" placeholder="e.g. HabiTools - Free Web Utilities" oninput="genMeta()"></div>
-      <div><label>Meta Description</label><textarea id="metaD" placeholder="e.g. 100+ free browser tools for calculation and productivity" oninput="genMeta()" class="h-20"></textarea></div>
-      <div><label>Canonical / Website URL</label><input type="text" id="metaU" placeholder="https://example.com" oninput="genMeta()"></div>
-      <label>Generated HTML Meta Tags</label>
-      <textarea id="metaOut" readonly class="h-28 font-mono text-xs"></textarea>
+      <div><label>Site / Page Title</label><input type="text" id="metaT" placeholder="HabiTools" oninput="genMeta()"></div>
+      <div><label>Meta Description</label><textarea id="metaD" placeholder="Description" oninput="genMeta()" class="h-20"></textarea></div>
+      <div><label>Canonical URL</label><input type="text" id="metaU" placeholder="https://example.com" oninput="genMeta()"></div>
+      <textarea id="metaOut" readonly class="h-24 font-mono text-xs"></textarea>
     </div>
   `;
 }
 window.genMeta = () => {
-  const t = document.getElementById('metaT').value || "Title";
-  const d = document.getElementById('metaD').value || "Description";
-  const u = document.getElementById('metaU').value || "https://example.com";
-  document.getElementById('metaOut').value = `<title>${t}</title>\n<meta name="description" content="${d}">\n<meta property="og:title" content="${t}">\n<meta property="og:description" content="${d}">\n<meta property="og:url" content="${u}">\n<meta name="twitter:card" content="summary_large_image">`;
+  const t = document.getElementById('metaT').value || "Title", d = document.getElementById('metaD').value || "Description", u = document.getElementById('metaU').value || "https://example.com";
+  document.getElementById('metaOut').value = `<title>${t}</title>\n<meta name="description" content="${d}">\n<meta property="og:title" content="${t}">\n<meta property="og:description" content="${d}">\n<meta property="og:url" content="${u}">`;
 };
 
 function renderRobotsGen(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <div>
-        <label>Allow All Search Engines?</label>
-        <select id="robAllow"><option value="allow">Allow All (Default)</option><option value="disallow">Disallow / Block All</option></select>
-      </div>
-      <div><label>Disallow Path (Optional)</label><input type="text" id="robPath" value="/admin/"></div>
-      <div><label>Sitemap URL</label><input type="text" id="robSite" placeholder="https://example.com/sitemap.xml"></div>
-      <button onclick="genRobots()">Generate Robots.txt</button>
-      <textarea id="robOut" readonly class="h-24 font-mono text-xs"></textarea>
+      <select id="robAllow"><option value="allow">Allow All</option><option value="disallow">Disallow All</option></select>
+      <input type="text" id="robSite" placeholder="Sitemap URL">
+      <button onclick="genRobots()">Generate</button>
+      <textarea id="robOut" readonly class="h-20 font-mono text-xs"></textarea>
     </div>
   `;
 }
 window.genRobots = () => {
-  const a = document.getElementById('robAllow').value;
-  const p = document.getElementById('robPath').value;
-  const s = document.getElementById('robSite').value;
-  let code = `User-agent: *\n`;
-  if (a === 'disallow') code += `Disallow: /\n`;
-  else if (p) code += `Disallow: ${p}\n`;
-  if (s) code += `Sitemap: ${s}\n`;
-  document.getElementById('robOut').value = code;
+  const a = document.getElementById('robAllow').value, s = document.getElementById('robSite').value;
+  document.getElementById('robOut').value = `User-agent: *\n${a === 'disallow' ? 'Disallow: /\n' : ''}${s ? 'Sitemap: ' + s : ''}`;
 };
 
 function renderUtmBuilder(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <div><label>Website URL *</label><input type="text" id="utmUrl" placeholder="https://mywebsite.com" oninput="buildUtm()"></div>
+      <input type="text" id="utmUrl" placeholder="https://website.com" oninput="buildUtm()">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Source (e.g. google, facebook)</label><input type="text" id="utmSrc" placeholder="facebook" oninput="buildUtm()"></div>
-        <div><label>Medium (e.g. cpc, banner, bio)</label><input type="text" id="utmMed" placeholder="cpc" oninput="buildUtm()"></div>
+        <input type="text" id="utmSrc" placeholder="Source (google)" oninput="buildUtm()">
+        <input type="text" id="utmMed" placeholder="Medium (cpc)" oninput="buildUtm()">
       </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Campaign Name</label><input type="text" id="utmCmp" placeholder="summer_sale" oninput="buildUtm()"></div>
-        <div><label>Campaign Term (Keyword)</label><input type="text" id="utmTrm" placeholder="shoes" oninput="buildUtm()"></div>
-      </div>
-      <label>Final Tracking URL</label>
       <textarea id="utmOut" readonly class="h-20 font-mono text-xs select-all"></textarea>
     </div>
   `;
 }
 window.buildUtm = () => {
-  const u = document.getElementById('utmUrl').value.trim();
-  const s = document.getElementById('utmSrc').value.trim();
-  const m = document.getElementById('utmMed').value.trim();
-  const c = document.getElementById('utmCmp').value.trim();
-  const t = document.getElementById('utmTrm').value.trim();
+  const u = document.getElementById('utmUrl').value.trim(), s = document.getElementById('utmSrc').value.trim(), m = document.getElementById('utmMed').value.trim();
   if (!u) { document.getElementById('utmOut').value = ""; return; }
   const params = new URLSearchParams();
   if (s) params.append('utm_source', s);
   if (m) params.append('utm_medium', m);
-  if (c) params.append('utm_campaign', c);
-  if (t) params.append('utm_term', t);
   const q = params.toString();
   document.getElementById('utmOut').value = q ? `${u}${u.includes('?') ? '&' : '?'}${q}` : u;
 };
@@ -124,67 +184,132 @@ window.buildUtm = () => {
 function renderSocialCounter(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <textarea id="socTxt" oninput="runSocialCount()" placeholder="Type your social bio or post content here..." class="h-28"></textarea>
+      <textarea id="socTxt" oninput="runSocialCount()" placeholder="Type here..." class="h-28"></textarea>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>X (Twitter)</div><b id="scX" class="font-mono text-stone-900">280 left</b></div>
-        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>Insta Bio</div><b id="scIg" class="font-mono text-stone-900">150 left</b></div>
-        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>LinkedIn Post</div><b id="scLi" class="font-mono text-stone-900">3000 left</b></div>
-        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>Total Chars</div><b id="scTot" class="font-mono text-orange-700">0</b></div>
+        <div class="p-2 bg-stone-50 border border-stone-200 rounded-xl"><div>X</div><b id="scX">280</b></div>
+        <div class="p-2 bg-stone-50 border border-stone-200 rounded-xl"><div>Insta</div><b id="scIg">150</b></div>
+        <div class="p-2 bg-stone-50 border border-stone-200 rounded-xl"><div>LinkedIn</div><b id="scLi">3000</b></div>
+        <div class="p-2 bg-stone-50 border border-stone-200 rounded-xl"><div>Total</div><b id="scTot" class="text-orange-700">0</b></div>
       </div>
     </div>
   `;
 }
 window.runSocialCount = () => {
-  const len = document.getElementById('socTxt').value.length;
-  document.getElementById('scX').innerText = `${280 - len}`;
-  document.getElementById('scIg').innerText = `${150 - len}`;
-  document.getElementById('scLi').innerText = `${3000 - len}`;
-  document.getElementById('scTot').innerText = len;
+  const l = document.getElementById('socTxt').value.length;
+  document.getElementById('scX').innerText = 280 - l;
+  document.getElementById('scIg').innerText = 150 - l;
+  document.getElementById('scLi').innerText = 3000 - l;
+  document.getElementById('scTot').innerText = l;
 };
 
 function renderHashtagGen(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <textarea id="hashIn" placeholder="Paste content with or without hashtags..." class="h-24"></textarea>
+      <textarea id="hashIn" placeholder="Enter text..." class="h-24"></textarea>
       <div class="grid grid-cols-2 gap-2">
-        <button onclick="extractHash()">Extract Existing #</button>
-        <button onclick="wordsToHash()">Convert Words to #</button>
+        <button onclick="extractHash()">Extract #</button>
+        <button onclick="wordsToHash()">Words to #</button>
       </div>
-      <textarea id="hashOut" readonly placeholder="Extracted hashtags will appear here..." class="h-24 font-mono text-xs"></textarea>
+      <textarea id="hashOut" readonly class="h-24 font-mono text-xs"></textarea>
     </div>
   `;
 }
 window.extractHash = () => {
-  const t = document.getElementById('hashIn').value;
-  const matches = t.match(/#[a-zA-Z0-9_]+/g);
-  document.getElementById('hashOut').value = matches ? [...new Set(matches)].join(' ') : "No hashtags found";
+  const m = document.getElementById('hashIn').value.match(/#[a-zA-Z0-9_]+/g);
+  document.getElementById('hashOut').value = m ? [...new Set(m)].join(' ') : "None";
 };
 window.wordsToHash = () => {
-  const t = document.getElementById('hashIn').value;
-  const words = t.replace(/[^\w\s]/gi, '').split(/\s+/).filter(w => w.length > 2);
-  document.getElementById('hashOut').value = [...new Set(words)].map(w => '#' + w.toLowerCase()).join(' ');
+  const w = document.getElementById('hashIn').value.replace(/[^\w\s]/gi, '').split(/\s+/).filter(x => x.length > 2);
+  document.getElementById('hashOut').value = [...new Set(w)].map(x => '#' + x.toLowerCase()).join(' ');
+};
+
+function renderTempConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" id="tmpV" value="100" oninput="runTemp()">
+        <select id="tmpU" onchange="runTemp()"><option value="c">Celsius</option><option value="f">Fahrenheit</option></select>
+      </div>
+      <div id="tmpRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+    </div>
+  `;
+  setTimeout(runTemp, 50);
+}
+window.runTemp = () => {
+  const v = parseFloat(document.getElementById('tmpV').value), u = document.getElementById('tmpU').value;
+  if (isNaN(v)) return;
+  const c = u === 'c' ? v : (v - 32) * 5/9, f = u === 'c' ? (v * 9/5) + 32 : v;
+  document.getElementById('tmpRes').innerHTML = `<div>Celsius: <b>${c.toFixed(2)} °C</b></div><div>Fahrenheit: <b>${f.toFixed(2)} °F</b></div>`;
+};
+
+function renderWeightConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" id="wVal" value="1" oninput="runWeight()">
+        <select id="wUnit" onchange="runWeight()"><option value="kg">KG</option><option value="lb">Lbs</option></select>
+      </div>
+      <div id="wRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs"></div>
+    </div>
+  `;
+  setTimeout(runWeight, 50);
+}
+window.runWeight = () => {
+  const v = parseFloat(document.getElementById('wVal').value), u = document.getElementById('wUnit').value;
+  if (isNaN(v)) return;
+  const kg = u === 'kg' ? v : v * 0.453592;
+  document.getElementById('wRes').innerHTML = `<div>KG: <b>${kg.toFixed(3)}</b> | LBS: <b>${(kg * 2.20462).toFixed(3)}</b></div>`;
+};
+
+function renderSpeedConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" id="spdVal" value="60" oninput="runSpeed()">
+        <select id="spdUnit" onchange="runSpeed()"><option value="kmh">km/h</option><option value="mph">mph</option></select>
+      </div>
+      <div id="spdRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs"></div>
+    </div>
+  `;
+  setTimeout(runSpeed, 50);
+}
+window.runSpeed = () => {
+  const v = parseFloat(document.getElementById('spdVal').value), u = document.getElementById('spdUnit').value;
+  if (isNaN(v)) return;
+  const kmh = u === 'kmh' ? v : v * 1.60934;
+  document.getElementById('spdRes').innerHTML = `<div>km/h: <b>${kmh.toFixed(2)}</b> | mph: <b>${(kmh / 1.60934).toFixed(2)}</b></div>`;
+};
+
+function renderDataConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" id="dtVal" value="1024" oninput="runData()">
+        <select id="dtUnit" onchange="runData()"><option value="mb">MB</option><option value="gb">GB</option></select>
+      </div>
+      <div id="dtRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs"></div>
+    </div>
+  `;
+  setTimeout(runData, 50);
+}
+window.runData = () => {
+  const v = parseFloat(document.getElementById('dtVal').value), u = document.getElementById('dtUnit').value;
+  if (isNaN(v)) return;
+  const mb = u === 'mb' ? v : v * 1024;
+  document.getElementById('dtRes').innerHTML = `<div>GB: <b>${(mb / 1024).toFixed(3)}</b> | MB: <b>${mb.toFixed(1)}</b></div>`;
 };
 function renderCalorieCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="calGen"><option value="m">Male</option><option value="f">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="calAge" value="25"></div>
+        <select id="calGen"><option value="m">Male</option><option value="f">Female</option></select>
+        <input type="number" id="calAge" value="25" placeholder="Age">
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="calW" value="70"></div>
-        <div><label>Height (CM)</label><input type="number" id="calH" value="175"></div>
+        <input type="number" id="calW" value="70" placeholder="KG">
+        <input type="number" id="calH" value="175" placeholder="CM">
       </div>
-      <div>
-        <label>Activity Level</label>
-        <select id="calAct">
-          <option value="1.2">Sedentary (Little/No exercise)</option>
-          <option value="1.375" selected>Lightly active (1-3 days/week)</option>
-          <option value="1.55">Moderately active (3-5 days/week)</option>
-          <option value="1.725">Very active (6-7 days/week)</option>
-        </select>
-      </div>
-      <button onclick="calcCalories()">Calculate Daily Calories</button>
+      <button onclick="calcCalories()">Calculate</button>
       <div id="calRes" class="text-xs space-y-1 hidden"></div>
     </div>
   `;
@@ -192,16 +317,11 @@ function renderCalorieCalc(c) {
 window.calcCalories = () => {
   const g = document.getElementById('calGen').value, a = parseFloat(document.getElementById('calAge').value);
   const w = parseFloat(document.getElementById('calW').value), h = parseFloat(document.getElementById('calH').value);
-  const act = parseFloat(document.getElementById('calAct').value);
   if (!a || !w || !h) return;
-  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
-  let tdee = Math.round(bmr * act);
+  const bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
+  const tdee = Math.round(bmr * 1.375);
   const res = document.getElementById('calRes');
-  res.innerHTML = `
-    <div>Maintain Weight: <b class="font-mono text-orange-700">${tdee} kcal/day</b></div>
-    <div>Mild Weight Loss (-0.25kg/w): <b class="font-mono text-emerald-700">${tdee - 250} kcal</b></div>
-    <div>Weight Loss (-0.5kg/w): <b class="font-mono text-blue-700">${tdee - 500} kcal</b></div>
-  `;
+  res.innerHTML = `<div>Maintenance: <b>${tdee} kcal</b></div><div>Weight Loss: <b>${tdee - 500} kcal</b></div>`;
   res.classList.remove('hidden');
 };
 
@@ -209,12 +329,12 @@ function renderBmrCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="bmrGen"><option value="m">Male</option><option value="f">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="bmrAge" value="22"></div>
+        <select id="bmrGen"><option value="m">Male</option><option value="f">Female</option></select>
+        <input type="number" id="bmrAge" value="22">
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="bmrW" value="65"></div>
-        <div><label>Height (CM)</label><input type="number" id="bmrH" value="170"></div>
+        <input type="number" id="bmrW" value="65">
+        <input type="number" id="bmrH" value="170">
       </div>
       <button onclick="calcBmr()">Calculate BMR</button>
       <div id="bmrRes" class="text-center font-bold text-sm hidden"></div>
@@ -225,33 +345,27 @@ window.calcBmr = () => {
   const g = document.getElementById('bmrGen').value, a = parseFloat(document.getElementById('bmrAge').value);
   const w = parseFloat(document.getElementById('bmrW').value), h = parseFloat(document.getElementById('bmrH').value);
   if (!a || !w || !h) return;
-  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
+  const bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
   const res = document.getElementById('bmrRes');
-  res.innerText = `Your BMR: ${Math.round(bmr)} Calories/day`;
+  res.innerText = `BMR: ${Math.round(bmr)} Calories/day`;
   res.classList.remove('hidden');
 };
 
 function renderWaterCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <div><label>Your Body Weight (KG)</label><input type="number" id="watW" value="65"></div>
-      <div>
-        <label>Daily Activity</label>
-        <select id="watAct"><option value="0">Normal Desk Work</option><option value="0.5">Moderate Exercise (30-60m)</option><option value="1">Heavy Workout / Athlete</option></select>
-      </div>
-      <button onclick="calcWater()">Calculate Daily Water Goal</button>
+      <input type="number" id="watW" value="65" placeholder="Weight (KG)">
+      <button onclick="calcWater()">Calculate Goal</button>
       <div id="watRes" class="text-center font-bold text-sm hidden"></div>
     </div>
   `;
 }
 window.calcWater = () => {
   const w = parseFloat(document.getElementById('watW').value);
-  const act = parseFloat(document.getElementById('watAct').value);
   if (!w) return;
-  const liters = ((w * 0.033) + act).toFixed(2);
-  const glasses = Math.round(liters / 0.25);
+  const liters = (w * 0.033).toFixed(2);
   const res = document.getElementById('watRes');
-  res.innerHTML = `Drink: <b class="text-orange-700">${liters} Liters</b> (~${glasses} Glasses/day)`;
+  res.innerHTML = `Drink: <b>${liters} Liters</b> (~${Math.round(liters/0.25)} Glasses)`;
   res.classList.remove('hidden');
 };
 
@@ -259,347 +373,305 @@ function renderBodyFatCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="bfGen"><option value="1">Male</option><option value="0">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="bfAge" value="24"></div>
+        <select id="bfGen"><option value="1">Male</option><option value="0">Female</option></select>
+        <input type="number" id="bfAge" value="24">
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="bfW" value="68"></div>
-        <div><label>Height (CM)</label><input type="number" id="bfH" value="172"></div>
+        <input type="number" id="bfW" value="68">
+        <input type="number" id="bfH" value="172">
       </div>
-      <button onclick="calcBodyFat()">Estimate Body Fat %</button>
+      <button onclick="calcBodyFat()">Estimate</button>
       <div id="bfRes" class="text-center font-bold text-sm hidden"></div>
     </div>
   `;
 }
 window.calcBodyFat = () => {
-  const sex = parseInt(document.getElementById('bfGen').value), age = parseFloat(document.getElementById('bfAge').value);
+  const s = parseInt(document.getElementById('bfGen').value), a = parseFloat(document.getElementById('bfAge').value);
   const w = parseFloat(document.getElementById('bfW').value), h = parseFloat(document.getElementById('bfH').value) / 100;
-  if (!age || !w || !h) return;
-  const bmi = w / (h * h);
-  const fat = (1.20 * bmi + 0.23 * age - 10.8 * sex - 5.4).toFixed(1);
-  const res = document.getElementById('bfRes');
-  res.innerText = `Estimated Body Fat: ${fat}%`;
-  res.classList.remove('hidden');
-};
-
-function renderTempConv(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Value</label><input type="number" id="tmpV" value="100" oninput="runTemp()"></div>
-        <div><label>Unit</label><select id="tmpU" onchange="runTemp()"><option value="c">Celsius (°C)</option><option value="f">Fahrenheit (°F)</option><option value="k">Kelvin (K)</option></select></div>
-      </div>
-      <div id="tmpRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
-    </div>
-  `;
-  setTimeout(runTemp, 50);
-}
-window.runTemp = () => {
-  const v = parseFloat(document.getElementById('tmpV').value), u = document.getElementById('tmpU').value;
-  if (isNaN(v)) return;
-  let c = 0, f = 0, k = 0;
-  if (u === 'c') { c = v; f = (v * 9/5) + 32; k = v + 273.15; }
-  else if (u === 'f') { c = (v - 32) * 5/9; f = v; k = c + 273.15; }
-  else { k = v; c = v - 273.15; f = (c * 9/5) + 32; }
-  document.getElementById('tmpRes').innerHTML = `<div>Celsius: <b>${c.toFixed(2)} °C</b></div><div>Fahrenheit: <b>${f.toFixed(2)} °F</b></div><div>Kelvin: <b>${k.toFixed(2)} K</b></div>`;
-};
-
-function renderWeightConv(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight</label><input type="number" id="wVal" value="1" oninput="runWeight()"></div>
-        <div><label>Unit</label><select id="wUnit" onchange="runWeight()"><option value="kg">Kilograms (kg)</option><option value="lb">Pounds (lbs)</option><option value="g">Grams (g)</option><option value="oz">Ounces (oz)</option></select></div>
-      </div>
-      <div id="wRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
-    </div>
-  `;
-  setTimeout(runWeight, 50);
-}
-window.runWeight = () => {
-  const v = parseFloat(document.getElementById('wVal').value), u = document.getElementById('wUnit').value;
-  if (isNaN(v)) return;
-  let kg = u === 'kg' ? v : u === 'lb' ? v * 0.453592 : u === 'g' ? v / 1000 : v * 0.0283495;
-  document.getElementById('wRes').innerHTML = `<div>Kilograms: <b>${kg.toFixed(3)} kg</b></div><div>Pounds: <b>${(kg * 2.20462).toFixed(3)} lbs</b></div>`;
-};
-
-function renderSpeedConv(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Speed</label><input type="number" id="spdVal" value="60" oninput="runSpeed()"></div>
-        <div><label>Unit</label><select id="spdUnit" onchange="runSpeed()"><option value="kmh">km/h</option><option value="mph">mph</option><option value="ms">m/s</option></select></div>
-      </div>
-      <div id="spdRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
-    </div>
-  `;
-  setTimeout(runSpeed, 50);
-}
-window.runSpeed = () => {
-  const v = parseFloat(document.getElementById('spdVal').value), u = document.getElementById('spdUnit').value;
-  if (isNaN(v)) return;
-  let kmh = u === 'kmh' ? v : u === 'mph' ? v * 1.60934 : v * 3.6;
-  document.getElementById('spdRes').innerHTML = `<div>km/h: <b>${kmh.toFixed(2)}</b></div><div>mph: <b>${(kmh / 1.60934).toFixed(2)}</b></div>`;
-};
-
-function renderDataConv(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Storage Size</label><input type="number" id="dtVal" value="1024" oninput="runData()"></div>
-        <div><label>Unit</label><select id="dtUnit" onchange="runData()"><option value="mb">Megabytes (MB)</option><option value="gb">Gigabytes (GB)</option><option value="tb">Terabytes (TB)</option></select></div>
-      </div>
-      <div id="dtRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
-    </div>
-  `;
-  setTimeout(runData, 50);
-}
-window.runData = () => {
-  const v = parseFloat(document.getElementById('dtVal').value), u = document.getElementById('dtUnit').value;
-  if (isNaN(v)) return;
-  let mb = u === 'mb' ? v : u === 'gb' ? v * 1024 : u * 1024 * 1024;
-  document.getElementById('dtRes').innerHTML = `<div>GB: <b>${(mb / 1024).toFixed(3)} GB</b></div><div>MB: <b>${mb.toFixed(1)} MB</b></div>`;
-};
-function renderCalorieCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="calGen"><option value="m">Male</option><option value="f">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="calAge" value="25"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="calW" value="70"></div>
-        <div><label>Height (CM)</label><input type="number" id="calH" value="175"></div>
-      </div>
-      <div>
-        <label>Activity Level</label>
-        <select id="calAct">
-          <option value="1.2">Sedentary (Little/No exercise)</option>
-          <option value="1.375" selected>Lightly active (1-3 days/week)</option>
-          <option value="1.55">Moderately active (3-5 days/week)</option>
-          <option value="1.725">Very active (6-7 days/week)</option>
-        </select>
-      </div>
-      <button onclick="calcCalories()">Calculate Daily Calories</button>
-      <div id="calRes" class="text-xs space-y-1 hidden"></div>
-    </div>
-  `;
-}
-window.calcCalories = () => {
-  const g = document.getElementById('calGen').value, a = parseFloat(document.getElementById('calAge').value);
-  const w = parseFloat(document.getElementById('calW').value), h = parseFloat(document.getElementById('calH').value);
-  const act = parseFloat(document.getElementById('calAct').value);
   if (!a || !w || !h) return;
-  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
-  let tdee = Math.round(bmr * act);
-  const res = document.getElementById('calRes');
-  res.innerHTML = `
-    <div>Maintain Weight: <b class="font-mono text-orange-700">${tdee} kcal/day</b></div>
-    <div>Mild Weight Loss (-0.25kg/w): <b class="font-mono text-emerald-700">${tdee - 250} kcal</b></div>
-    <div>Weight Loss (-0.5kg/w): <b class="font-mono text-blue-700">${tdee - 500} kcal</b></div>
-  `;
-  res.classList.remove('hidden');
-};
-
-function renderBmrCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="bmrGen"><option value="m">Male</option><option value="f">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="bmrAge" value="22"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="bmrW" value="65"></div>
-        <div><label>Height (CM)</label><input type="number" id="bmrH" value="170"></div>
-      </div>
-      <button onclick="calcBmr()">Calculate BMR</button>
-      <div id="bmrRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcBmr = () => {
-  const g = document.getElementById('bmrGen').value, a = parseFloat(document.getElementById('bmrAge').value);
-  const w = parseFloat(document.getElementById('bmrW').value), h = parseFloat(document.getElementById('bmrH').value);
-  if (!a || !w || !h) return;
-  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
-  const res = document.getElementById('bmrRes');
-  res.innerText = `Your BMR: ${Math.round(bmr)} Calories/day`;
-  res.classList.remove('hidden');
-};
-
-function renderWaterCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Your Body Weight (KG)</label><input type="number" id="watW" value="65"></div>
-      <div>
-        <label>Daily Activity</label>
-        <select id="watAct"><option value="0">Normal Desk Work</option><option value="0.5">Moderate Exercise (30-60m)</option><option value="1">Heavy Workout / Athlete</option></select>
-      </div>
-      <button onclick="calcWater()">Calculate Daily Water Goal</button>
-      <div id="watRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcWater = () => {
-  const w = parseFloat(document.getElementById('watW').value);
-  const act = parseFloat(document.getElementById('watAct').value);
-  if (!w) return;
-  const liters = ((w * 0.033) + act).toFixed(2);
-  const glasses = Math.round(liters / 0.25);
-  const res = document.getElementById('watRes');
-  res.innerHTML = `Drink: <b class="text-orange-700">${liters} Liters</b> (~${glasses} Glasses/day)`;
-  res.classList.remove('hidden');
-};
-
-function renderBodyFatCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Gender</label><select id="bfGen"><option value="1">Male</option><option value="0">Female</option></select></div>
-        <div><label>Age</label><input type="number" id="bfAge" value="24"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight (KG)</label><input type="number" id="bfW" value="68"></div>
-        <div><label>Height (CM)</label><input type="number" id="bfH" value="172"></div>
-      </div>
-      <button onclick="calcBodyFat()">Estimate Body Fat %</button>
-      <div id="bfRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcBodyFat = () => {
-  const sex = parseInt(document.getElementById('bfGen').value), age = parseFloat(document.getElementById('bfAge').value);
-  const w = parseFloat(document.getElementById('bfW').value), h = parseFloat(document.getElementById('bfH').value) / 100;
-  if (!age || !w || !h) return;
-  const bmi = w / (h * h);
-  const fat = (1.20 * bmi + 0.23 * age - 10.8 * sex - 5.4).toFixed(1);
+  const fat = (1.20 * (w / (h * h)) + 0.23 * a - 10.8 * s - 5.4).toFixed(1);
   const res = document.getElementById('bfRes');
-  res.innerText = `Estimated Body Fat: ${fat}%`;
+  res.innerText = `Body Fat: ${fat}%`;
   res.classList.remove('hidden');
 };
 
-function renderTempConv(c) {
+function renderSipCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
+      <input type="number" id="sipAmt" value="5000" placeholder="Monthly ₹" oninput="runSip()">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Value</label><input type="number" id="tmpV" value="100" oninput="runTemp()"></div>
-        <div><label>Unit</label><select id="tmpU" onchange="runTemp()"><option value="c">Celsius (°C)</option><option value="f">Fahrenheit (°F)</option><option value="k">Kelvin (K)</option></select></div>
+        <input type="number" id="sipRate" value="12" step="0.5" oninput="runSip()">
+        <input type="number" id="sipYears" value="10" oninput="runSip()">
       </div>
-      <div id="tmpRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1">
+        <div>Invested: <b id="sipInv">₹ 0</b></div>
+        <div>Maturity: <b id="sipTot" class="text-orange-700">₹ 0</b></div>
+      </div>
     </div>
   `;
-  setTimeout(runTemp, 50);
+  setTimeout(runSip, 50);
 }
-window.runTemp = () => {
-  const v = parseFloat(document.getElementById('tmpV').value), u = document.getElementById('tmpU').value;
-  if (isNaN(v)) return;
-  let c = 0, f = 0, k = 0;
-  if (u === 'c') { c = v; f = (v * 9/5) + 32; k = v + 273.15; }
-  else if (u === 'f') { c = (v - 32) * 5/9; f = v; k = c + 273.15; }
-  else { k = v; c = v - 273.15; f = (c * 9/5) + 32; }
-  document.getElementById('tmpRes').innerHTML = `<div>Celsius: <b>${c.toFixed(2)} °C</b></div><div>Fahrenheit: <b>${f.toFixed(2)} °F</b></div><div>Kelvin: <b>${k.toFixed(2)} K</b></div>`;
+window.runSip = () => {
+  const p = parseFloat(document.getElementById('sipAmt').value) || 0, i = (parseFloat(document.getElementById('sipRate').value) || 0) / 12 / 100, n = (parseFloat(document.getElementById('sipYears').value) || 0) * 12;
+  if (!p || !i || !n) return;
+  const tot = p * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+  document.getElementById('sipInv').innerText = "₹ " + Math.round(p * n).toLocaleString('en-IN');
+  document.getElementById('sipTot').innerText = "₹ " + Math.round(tot).toLocaleString('en-IN');
 };
 
-function renderWeightConv(c) {
+function renderCiCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
+      <input type="number" id="ciP" value="100000" oninput="runCi()">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Weight</label><input type="number" id="wVal" value="1" oninput="runWeight()"></div>
-        <div><label>Unit</label><select id="wUnit" onchange="runWeight()"><option value="kg">Kilograms (kg)</option><option value="lb">Pounds (lbs)</option><option value="g">Grams (g)</option><option value="oz">Ounces (oz)</option></select></div>
+        <input type="number" id="ciR" value="8" step="0.1" oninput="runCi()">
+        <input type="number" id="ciT" value="5" oninput="runCi()">
       </div>
-      <div id="wRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1">
+        <div>Total: <b id="ciTot" class="text-orange-700">₹ 0</b></div>
+      </div>
     </div>
   `;
-  setTimeout(runWeight, 50);
+  setTimeout(runCi, 50);
 }
-window.runWeight = () => {
-  const v = parseFloat(document.getElementById('wVal').value), u = document.getElementById('wUnit').value;
-  if (isNaN(v)) return;
-  let kg = u === 'kg' ? v : u === 'lb' ? v * 0.453592 : u === 'g' ? v / 1000 : v * 0.0283495;
-  document.getElementById('wRes').innerHTML = `<div>Kilograms: <b>${kg.toFixed(3)} kg</b></div><div>Pounds: <b>${(kg * 2.20462).toFixed(3)} lbs</b></div>`;
+window.runCi = () => {
+  const p = parseFloat(document.getElementById('ciP').value) || 0, r = (parseFloat(document.getElementById('ciR').value) || 0) / 100, t = parseFloat(document.getElementById('ciT').value) || 0;
+  if (!p || !r || !t) return;
+  document.getElementById('ciTot').innerText = "₹ " + Math.round(p * Math.pow((1 + r), t)).toLocaleString('en-IN');
 };
 
-function renderSpeedConv(c) {
+function renderFdCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
+      <input type="number" id="fdP" value="200000" oninput="runFd()">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Speed</label><input type="number" id="spdVal" value="60" oninput="runSpeed()"></div>
-        <div><label>Unit</label><select id="spdUnit" onchange="runSpeed()"><option value="kmh">km/h</option><option value="mph">mph</option><option value="ms">m/s</option></select></div>
+        <input type="number" id="fdR" value="7.1" step="0.1" oninput="runFd()">
+        <input type="number" id="fdT" value="3" oninput="runFd()">
       </div>
-      <div id="spdRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1">
+        <div>Maturity: <b id="fdTot" class="text-orange-700">₹ 0</b></div>
+      </div>
     </div>
   `;
-  setTimeout(runSpeed, 50);
+  setTimeout(runFd, 50);
 }
-window.runSpeed = () => {
-  const v = parseFloat(document.getElementById('spdVal').value), u = document.getElementById('spdUnit').value;
-  if (isNaN(v)) return;
-  let kmh = u === 'kmh' ? v : u === 'mph' ? v * 1.60934 : v * 3.6;
-  document.getElementById('spdRes').innerHTML = `<div>km/h: <b>${kmh.toFixed(2)}</b></div><div>mph: <b>${(kmh / 1.60934).toFixed(2)}</b></div>`;
+window.runFd = () => {
+  const p = parseFloat(document.getElementById('fdP').value) || 0, r = (parseFloat(document.getElementById('fdR').value) || 0) / 100, t = parseFloat(document.getElementById('fdT').value) || 0;
+  if (!p || !r || !t) return;
+  document.getElementById('fdTot').innerText = "₹ " + Math.round(p * Math.pow((1 + r/4), 4 * t)).toLocaleString('en-IN');
 };
 
-function renderDataConv(c) {
+function renderSalaryCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="ctcAmt" value="600000" oninput="runSalary()">
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs">
+        <div>Monthly In-Hand: <b id="salMonth" class="text-orange-700">₹ 0</b></div>
+      </div>
+    </div>
+  `;
+  setTimeout(runSalary, 50);
+}
+window.runSalary = () => {
+  const c = parseFloat(document.getElementById('ctcAmt').value) || 0;
+  if (!c) return;
+  const inHand = (c / 12) - Math.min((c / 12) * 0.12, 1800) - 200;
+  document.getElementById('salMonth').innerText = "₹ " + Math.round(inHand).toLocaleString('en-IN');
+};
+
+function renderCagrCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="cagrInit" value="50000">
+      <input type="number" id="cagrFin" value="120000">
+      <input type="number" id="cagrY" value="5">
+      <button onclick="calcCagr()">Calculate</button>
+      <div id="cagrRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcCagr = () => {
+  const i = parseFloat(document.getElementById('cagrInit').value), f = parseFloat(document.getElementById('cagrFin').value), y = parseFloat(document.getElementById('cagrY').value);
+  if (!i || !f || !y) return;
+  const res = document.getElementById('cagrRes');
+  res.innerText = `CAGR: ${((Math.pow(f / i, 1 / y) - 1) * 100).toFixed(2)}%`;
+  res.classList.remove('hidden');
+};
+
+function renderEmiCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="loanAmount" value="500000" oninput="runEmi()">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" id="interestRate" step="0.1" value="9.5" oninput="runEmi()">
+        <input type="number" id="tenureYears" value="5" oninput="runEmi()">
+      </div>
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs">
+        <div>Monthly EMI: <b id="emiMonthly" class="text-orange-700">₹ 0</b></div>
+      </div>
+    </div>
+  `;
+  setTimeout(runEmi, 50);
+}
+window.runEmi = () => {
+  const p = parseFloat(document.getElementById('loanAmount').value) || 0, r = (parseFloat(document.getElementById('interestRate').value) || 0) / 12 / 100, n = (parseFloat(document.getElementById('tenureYears').value) || 0) * 12;
+  if (p <= 0 || r <= 0 || n <= 0) return;
+  const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  document.getElementById('emiMonthly').innerText = "₹ " + Math.round(emi).toLocaleString('en-IN');
+};
+
+function renderPctCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Storage Size</label><input type="number" id="dtVal" value="1024" oninput="runData()"></div>
-        <div><label>Unit</label><select id="dtUnit" onchange="runData()"><option value="mb">Megabytes (MB)</option><option value="gb">Gigabytes (GB)</option><option value="tb">Terabytes (TB)</option></select></div>
+        <input type="number" id="pVal" placeholder="%">
+        <input type="number" id="pTotal" placeholder="Total">
       </div>
-      <div id="dtRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+      <button onclick="calcPct()">Calculate</button>
+      <div id="pctRes" class="text-center font-bold text-sm hidden"></div>
     </div>
   `;
-  setTimeout(runData, 50);
 }
-window.runData = () => {
-  const v = parseFloat(document.getElementById('dtVal').value), u = document.getElementById('dtUnit').value;
-  if (isNaN(v)) return;
-  let mb = u === 'mb' ? v : u === 'gb' ? v * 1024 : u * 1024 * 1024;
-  document.getElementById('dtRes').innerHTML = `<div>GB: <b>${(mb / 1024).toFixed(3)} GB</b></div><div>MB: <b>${mb.toFixed(1)} MB</b></div>`;
+window.calcPct = () => {
+  const v = parseFloat(document.getElementById('pVal').value), t = parseFloat(document.getElementById('pTotal').value);
+  if (isNaN(v) || isNaN(t)) return;
+  const res = document.getElementById('pctRes');
+  res.innerText = `${v}% of ${t} = ${(v * t) / 100}`;
+  res.classList.remove('hidden');
 };
+
+function renderGstCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="gstAmt" placeholder="Amount">
+      <div class="grid grid-cols-2 gap-2">
+        <select id="gstRate"><option value="18">18%</option><option value="12">12%</option><option value="5">5%</option></select>
+        <select id="gstType"><option value="exclusive">Exclusive (+)</option><option value="inclusive">Inclusive (-)</option></select>
+      </div>
+      <button onclick="calcGst()">Compute Tax</button>
+      <div id="gstRes" class="text-xs hidden"></div>
+    </div>
+  `;
+}
+window.calcGst = () => {
+  const a = parseFloat(document.getElementById('gstAmt').value), r = parseFloat(document.getElementById('gstRate').value), t = document.getElementById('gstType').value;
+  if (!a) return;
+  const tax = t === 'exclusive' ? (a * r) / 100 : a - (a * (100 / (100 + r)));
+  const res = document.getElementById('gstRes');
+  res.innerHTML = `<div>Tax: <b>₹${tax.toFixed(2)}</b> | Total: <b>₹${(t === 'exclusive' ? a + tax : a).toFixed(2)}</b></div>`;
+  res.classList.remove('hidden');
+};
+
+function renderDiscountCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="dp" placeholder="Price">
+      <input type="number" id="dd" placeholder="Discount %">
+      <button onclick="calcDisc()">Calculate</button>
+      <div id="discRes" class="text-xs hidden"></div>
+    </div>
+  `;
+}
+window.calcDisc = () => {
+  const p = parseFloat(document.getElementById('dp').value), d = parseFloat(document.getElementById('dd').value);
+  if (!p || isNaN(d)) return;
+  const s = (p * d) / 100;
+  const res = document.getElementById('discRes');
+  res.innerHTML = `<div>Save: <b>₹${s.toFixed(2)}</b> | Final: <b>₹${(p - s).toFixed(2)}</b></div>`;
+  res.classList.remove('hidden');
+};
+
+function renderAgeCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="date" id="dob">
+      <button onclick="calcAge()">Calculate</button>
+      <div id="ageRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcAge = () => {
+  const d = new Date(document.getElementById('dob').value);
+  if (isNaN(d.getTime())) return;
+  const diff = new Date(Date.now() - d.getTime());
+  const res = document.getElementById('ageRes');
+  res.innerText = `${Math.abs(diff.getUTCFullYear() - 1970)} Years, ${diff.getUTCMonth()} Months`;
+  res.classList.remove('hidden');
+};
+
+function renderBmiCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="bw" placeholder="Weight (KG)">
+      <input type="number" id="bh" placeholder="Height (CM)">
+      <button onclick="calcBmi()">Calculate</button>
+      <div id="bmiRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcBmi = () => {
+  const w = parseFloat(document.getElementById('bw').value), h = parseFloat(document.getElementById('bh').value) / 100;
+  if (!w || !h) return;
+  const res = document.getElementById('bmiRes');
+  res.innerText = `BMI: ${(w / (h * h)).toFixed(1)}`;
+  res.classList.remove('hidden');
+};
+
+function renderUnitConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="number" id="uv" placeholder="Meters">
+      <button onclick="calcUnit()">Convert</button>
+      <div id="uRes" class="text-xs hidden"></div>
+    </div>
+  `;
+}
+window.calcUnit = () => {
+  const m = parseFloat(document.getElementById('uv').value);
+  if (isNaN(m)) return;
+  const res = document.getElementById('uRes');
+  res.innerHTML = `<div>KM: <b>${m / 1000}</b> | Feet: <b>${(m * 3.28084).toFixed(2)}</b></div>`;
+  res.classList.remove('hidden');
+};
+
 function renderDupRemover(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <textarea id="dupIn" placeholder="Paste lines with duplicates..." class="h-28"></textarea>
-      <button onclick="cleanDuplicates()">Remove Duplicate Lines</button>
-      <textarea id="dupOut" readonly placeholder="Unique lines..." class="h-28 font-mono"></textarea>
+      <textarea id="dupIn" placeholder="Paste lines..." class="h-28"></textarea>
+      <button onclick="cleanDuplicates()">Remove Duplicates</button>
+      <textarea id="dupOut" readonly class="h-28 font-mono"></textarea>
     </div>
   `;
 }
 window.cleanDuplicates = () => {
-  const val = document.getElementById('dupIn').value;
-  if (!val) return;
-  const lines = val.split('\n');
-  const unique = [...new Set(lines.map(l => l.trim()))].filter(l => l.length > 0);
-  document.getElementById('dupOut').value = unique.join('\n');
+  const v = document.getElementById('dupIn').value;
+  if (!v) return;
+  document.getElementById('dupOut').value = [...new Set(v.split('\n').map(l => l.trim()))].filter(l => l.length > 0).join('\n');
 };
 
 function renderSlugGen(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <input type="text" id="slugIn" placeholder="Post Title..." oninput="makeSlug()">
-      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl">
-        <label class="text-[10px] text-stone-500 uppercase">Slug</label>
-        <div id="slugOut" class="font-mono text-orange-700 font-bold text-sm select-all">slug-will-appear-here</div>
-      </div>
+      <input type="text" id="slugIn" placeholder="Post Title" oninput="makeSlug()">
+      <div id="slugOut" class="font-mono text-orange-700 font-bold text-sm select-all">slug-preview</div>
     </div>
   `;
 }
 window.makeSlug = () => {
   const v = document.getElementById('slugIn').value;
-  const slug = v.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
-  document.getElementById('slugOut').innerText = slug || "slug-will-appear-here";
+  document.getElementById('slugOut').innerText = v.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-');
 };
 
 function renderFindReplace(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <textarea id="frText" placeholder="Original text..." class="h-24"></textarea>
+      <textarea id="frText" placeholder="Text..." class="h-20"></textarea>
       <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="frFind" placeholder="Find...">
-        <input type="text" id="frReplace" placeholder="Replace...">
+        <input type="text" id="frFind" placeholder="Find">
+        <input type="text" id="frReplace" placeholder="Replace">
       </div>
       <button onclick="doFindReplace()">Replace All</button>
-      <textarea id="frOut" readonly placeholder="Updated text..." class="h-24"></textarea>
+      <textarea id="frOut" readonly class="h-20"></textarea>
     </div>
   `;
 }
@@ -612,29 +684,27 @@ window.doFindReplace = () => {
 function renderLoremGen(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <input type="number" id="loremParas" value="2" min="1" max="10" class="w-20 text-center font-bold">
+      <input type="number" id="loremParas" value="2" min="1" max="10">
       <button onclick="generateLorem()">Generate Lorem</button>
-      <textarea id="loremOut" readonly class="h-32 text-xs"></textarea>
+      <textarea id="loremOut" readonly class="h-28 text-xs"></textarea>
     </div>
   `;
 }
 window.generateLorem = () => {
   const count = parseInt(document.getElementById('loremParas').value) || 2;
-  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.";
-  let res = [];
-  for (let i = 0; i < count; i++) res.push(text);
-  document.getElementById('loremOut').value = res.join('\n\n');
+  const t = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+  document.getElementById('loremOut').value = Array(count).fill(t).join('\n\n');
 };
 
 function renderRandomPicker(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
-        <div><label>Min</label><input type="number" id="rMin" value="1"></div>
-        <div><label>Max</label><input type="number" id="rMax" value="100"></div>
+        <input type="number" id="rMin" value="1">
+        <input type="number" id="rMax" value="100">
       </div>
-      <button onclick="pickRandom()">Generate Number</button>
-      <div id="rPickOut" class="text-center font-mono text-2xl font-black text-orange-700 p-3 bg-orange-50 border border-orange-200 rounded-xl">--</div>
+      <button onclick="pickRandom()">Pick</button>
+      <div id="rPickOut" class="text-center font-mono text-2xl font-black text-orange-700">--</div>
     </div>
   `;
 }
@@ -643,264 +713,11 @@ window.pickRandom = () => {
   document.getElementById('rPickOut').innerText = Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-function renderSipCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Monthly (₹)</label><input type="number" id="sipAmt" value="5000" oninput="runSip()"></div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label>Return (%)</label><input type="number" id="sipRate" value="12" step="0.5" oninput="runSip()"></div>
-        <div><label>Years</label><input type="number" id="sipYears" value="10" oninput="runSip()"></div>
-      </div>
-      <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
-        <div class="flex justify-between text-xs"><span>Invested:</span><b id="sipInv" class="font-mono">₹ 0</b></div>
-        <div class="flex justify-between text-xs"><span>Returns:</span><b id="sipRet" class="font-mono text-emerald-700">₹ 0</b></div>
-        <div class="flex justify-between text-xs border-t border-stone-200 pt-2"><span class="font-bold">Total:</span><b id="sipTot" class="font-mono text-orange-700 text-base">₹ 0</b></div>
-      </div>
-    </div>
-  `;
-  setTimeout(runSip, 50);
-}
-window.runSip = () => {
-  const p = parseFloat(document.getElementById('sipAmt').value) || 0, i = (parseFloat(document.getElementById('sipRate').value) || 0) / 12 / 100, n = (parseFloat(document.getElementById('sipYears').value) || 0) * 12;
-  if (!p || !i || !n) return;
-  const tot = p * ((Math.pow(1 + i, n) - 1) / i) * (1 + i), inv = p * n;
-  document.getElementById('sipInv').innerText = "₹ " + Math.round(inv).toLocaleString('en-IN');
-  document.getElementById('sipRet').innerText = "₹ " + Math.round(tot - inv).toLocaleString('en-IN');
-  document.getElementById('sipTot').innerText = "₹ " + Math.round(tot).toLocaleString('en-IN');
-};
-
-function renderCiCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Principal (₹)</label><input type="number" id="ciP" value="100000" oninput="runCi()"></div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label>Rate (%)</label><input type="number" id="ciR" value="8" step="0.1" oninput="runCi()"></div>
-        <div><label>Years</label><input type="number" id="ciT" value="5" oninput="runCi()"></div>
-      </div>
-      <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
-        <div class="flex justify-between text-xs"><span>Interest:</span><b id="ciInt" class="font-mono text-emerald-700">₹ 0</b></div>
-        <div class="flex justify-between text-xs border-t border-stone-200 pt-2"><span class="font-bold">Total:</span><b id="ciTot" class="font-mono text-orange-700 text-base">₹ 0</b></div>
-      </div>
-    </div>
-  `;
-  setTimeout(runCi, 50);
-}
-window.runCi = () => {
-  const p = parseFloat(document.getElementById('ciP').value) || 0, r = (parseFloat(document.getElementById('ciR').value) || 0) / 100, t = parseFloat(document.getElementById('ciT').value) || 0;
-  if (!p || !r || !t) return;
-  const a = p * Math.pow((1 + r), t);
-  document.getElementById('ciInt').innerText = "₹ " + Math.round(a - p).toLocaleString('en-IN');
-  document.getElementById('ciTot').innerText = "₹ " + Math.round(a).toLocaleString('en-IN');
-};
-
-function renderFdCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Amount (₹)</label><input type="number" id="fdP" value="200000" oninput="runFd()"></div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label>Rate (%)</label><input type="number" id="fdR" value="7.1" step="0.1" oninput="runFd()"></div>
-        <div><label>Years</label><input type="number" id="fdT" value="3" oninput="runFd()"></div>
-      </div>
-      <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
-        <div class="flex justify-between text-xs"><span>Interest:</span><b id="fdInt" class="font-mono text-emerald-700">₹ 0</b></div>
-        <div class="flex justify-between text-xs border-t border-stone-200 pt-2"><span class="font-bold">Maturity:</span><b id="fdTot" class="font-mono text-orange-700 text-base">₹ 0</b></div>
-      </div>
-    </div>
-  `;
-  setTimeout(runFd, 50);
-}
-window.runFd = () => {
-  const p = parseFloat(document.getElementById('fdP').value) || 0, r = (parseFloat(document.getElementById('fdR').value) || 0) / 100, t = parseFloat(document.getElementById('fdT').value) || 0;
-  if (!p || !r || !t) return;
-  const mat = p * Math.pow((1 + r/4), 4 * t);
-  document.getElementById('fdInt').innerText = "₹ " + Math.round(mat - p).toLocaleString('en-IN');
-  document.getElementById('fdTot').innerText = "₹ " + Math.round(mat).toLocaleString('en-IN');
-};
-
-function renderSalaryCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>CTC (₹)</label><input type="number" id="ctcAmt" value="600000" oninput="runSalary()"></div>
-      <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
-        <div class="flex justify-between text-xs"><span>In-Hand Monthly:</span><b id="salMonth" class="font-mono text-orange-700 text-base">₹ 0</b></div>
-      </div>
-    </div>
-  `;
-  setTimeout(runSalary, 50);
-}
-window.runSalary = () => {
-  const c = parseFloat(document.getElementById('ctcAmt').value) || 0;
-  if (!c) return;
-  const m = c / 12, inHand = m - Math.min(m * 0.12, 1800) - 200;
-  document.getElementById('salMonth').innerText = "₹ " + Math.round(inHand).toLocaleString('en-IN');
-};
-
-function renderCagrCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <input type="number" id="cagrInit" value="50000" placeholder="Initial">
-      <input type="number" id="cagrFin" value="120000" placeholder="Final">
-      <input type="number" id="cagrY" value="5" placeholder="Years">
-      <button onclick="calcCagr()">Calculate</button>
-      <div id="cagrRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcCagr = () => {
-  const i = parseFloat(document.getElementById('cagrInit').value), f = parseFloat(document.getElementById('cagrFin').value), y = parseFloat(document.getElementById('cagrY').value);
-  if (!i || !f || !y) return;
-  const res = document.getElementById('cagrRes');
-  res.innerText = `CAGR: ${((Math.pow(f / i, 1 / y) - 1) * 100).toFixed(2)}% per year`;
-  res.classList.remove('hidden');
-};
-
-function renderEmiCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Loan Amount (₹ / $)</label><input type="number" id="loanAmount" value="500000" oninput="runEmi()"></div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label>Rate (%)</label><input type="number" id="interestRate" step="0.1" value="9.5" oninput="runEmi()"></div>
-        <div><label>Years</label><input type="number" id="tenureYears" value="5" oninput="runEmi()"></div>
-      </div>
-      <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
-        <div class="flex justify-between items-center"><span class="text-xs">Monthly EMI</span><span id="emiMonthly" class="text-base font-mono font-bold text-orange-700">₹ 0</span></div>
-        <div class="flex justify-between items-center text-xs"><span>Total Interest</span><span id="emiInterest" class="font-mono font-bold">₹ 0</span></div>
-        <div class="flex justify-between items-center text-xs border-t border-stone-200 pt-2"><span class="font-bold">Total Payable</span><span id="emiTotal" class="font-mono font-bold">₹ 0</span></div>
-      </div>
-    </div>
-  `;
-  setTimeout(runEmi, 50);
-}
-window.runEmi = () => {
-  const p = parseFloat(document.getElementById('loanAmount').value) || 0, r = (parseFloat(document.getElementById('interestRate').value) || 0) / 12 / 100, n = (parseFloat(document.getElementById('tenureYears').value) || 0) * 12;
-  if (p <= 0 || r <= 0 || n <= 0) return;
-  const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1), tot = emi * n;
-  document.getElementById('emiMonthly').innerText = "₹ " + Math.round(emi).toLocaleString('en-IN');
-  document.getElementById('emiInterest').innerText = "₹ " + Math.round(tot - p).toLocaleString('en-IN');
-  document.getElementById('emiTotal').innerText = "₹ " + Math.round(tot).toLocaleString('en-IN');
-};
-
-function renderPctCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label>What is (%)</label><input type="number" id="pVal" placeholder="20"></div>
-        <div><label>Of</label><input type="number" id="pTotal" placeholder="500"></div>
-      </div>
-      <button onclick="calcPct()">Calculate</button>
-      <div id="pctRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcPct = () => {
-  const v = parseFloat(document.getElementById('pVal').value), t = parseFloat(document.getElementById('pTotal').value);
-  if (isNaN(v) || isNaN(t)) return;
-  const res = document.getElementById('pctRes');
-  res.innerText = `${v}% of ${t} is ${(v * t) / 100}`;
-  res.classList.remove('hidden');
-};
-
-function renderGstCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Amount (₹)</label><input type="number" id="gstAmt" placeholder="10000"></div>
-      <div class="grid grid-cols-2 gap-3">
-        <select id="gstRate"><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select>
-        <select id="gstType"><option value="exclusive">Exclusive (+)</option><option value="inclusive">Inclusive (-)</option></select>
-      </div>
-      <button onclick="calcGst()">Compute Tax</button>
-      <div id="gstRes" class="text-xs space-y-1 hidden"></div>
-    </div>
-  `;
-}
-window.calcGst = () => {
-  const a = parseFloat(document.getElementById('gstAmt').value), r = parseFloat(document.getElementById('gstRate').value), t = document.getElementById('gstType').value;
-  if (!a) return;
-  const tax = t === 'exclusive' ? (a * r) / 100 : a - (a * (100 / (100 + r)));
-  const tot = t === 'exclusive' ? a + tax : a;
-  const res = document.getElementById('gstRes');
-  res.innerHTML = `<div>Tax: <b>₹${tax.toFixed(2)}</b></div><div>Total: <b>₹${tot.toFixed(2)}</b></div>`;
-  res.classList.remove('hidden');
-};
-
-function renderDiscountCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <input type="number" id="dp" placeholder="Original Price">
-      <input type="number" id="dd" placeholder="Discount %">
-      <button onclick="calcDisc()">Calculate</button>
-      <div id="discRes" class="text-xs space-y-1 hidden"></div>
-    </div>
-  `;
-}
-window.calcDisc = () => {
-  const p = parseFloat(document.getElementById('dp').value), d = parseFloat(document.getElementById('dd').value);
-  if (!p || isNaN(d)) return;
-  const s = (p * d) / 100;
-  const res = document.getElementById('discRes');
-  res.innerHTML = `<div>Save: <b>₹${s.toFixed(2)}</b></div><div>Price: <b>₹${(p - s).toFixed(2)}</b></div>`;
-  res.classList.remove('hidden');
-};
-
-function renderAgeCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <label>Birth Date</label><input type="date" id="dob">
-      <button onclick="calcAge()">Calculate</button>
-      <div id="ageRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcAge = () => {
-  const d = new Date(document.getElementById('dob').value);
-  if (isNaN(d.getTime())) return;
-  const diff = new Date(Date.now() - d.getTime());
-  const res = document.getElementById('ageRes');
-  res.innerText = `${Math.abs(diff.getUTCFullYear() - 1970)} Years, ${diff.getUTCMonth()} Months old`;
-  res.classList.remove('hidden');
-};
-
-function renderBmiCalc(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div><label>Weight (KG)</label><input type="number" id="bw" placeholder="65"></div>
-      <div><label>Height (CM)</label><input type="number" id="bh" placeholder="175"></div>
-      <button onclick="calcBmi()">Calculate BMI</button>
-      <div id="bmiRes" class="text-center font-bold text-sm hidden"></div>
-    </div>
-  `;
-}
-window.calcBmi = () => {
-  const w = parseFloat(document.getElementById('bw').value), h = parseFloat(document.getElementById('bh').value) / 100;
-  if (!w || !h) return;
-  const bmi = (w / (h * h)).toFixed(1);
-  const res = document.getElementById('bmiRes');
-  res.innerHTML = `BMI: ${bmi}`;
-  res.classList.remove('hidden');
-};
-
-function renderUnitConv(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <label>Meters</label><input type="number" id="uv" placeholder="500">
-      <button onclick="calcUnit()">Convert</button>
-      <div id="uRes" class="text-xs space-y-1 hidden"></div>
-    </div>
-  `;
-}
-window.calcUnit = () => {
-  const m = parseFloat(document.getElementById('uv').value);
-  if (isNaN(m)) return;
-  const res = document.getElementById('uRes');
-  res.innerHTML = `<div>Kilometers: <b>${m / 1000} km</b></div><div>Feet: <b>${(m * 3.28084).toFixed(2)} ft</b></div>`;
-  res.classList.remove('hidden');
-};
-
 function renderWordCounter(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <textarea id="wb" oninput="runWc()" placeholder="Type here..." class="h-28"></textarea>
-      <div class="text-xs font-bold text-center">Words: <span id="wCount">0</span> | Characters: <span id="cCount">0</span></div>
+      <div class="text-xs font-bold text-center">Words: <span id="wCount">0</span> | Chars: <span id="cCount">0</span></div>
     </div>
   `;
 }
@@ -913,7 +730,7 @@ window.runWc = () => {
 function renderCaseConv(c) {
   c.innerHTML = `
     <div class="space-y-3">
-      <textarea id="cb" placeholder="Enter text..." class="h-24"></textarea>
+      <textarea id="cb" placeholder="Text..." class="h-24"></textarea>
       <div class="grid grid-cols-3 gap-2 text-xs font-bold">
         <button onclick="document.getElementById('cb').value = document.getElementById('cb').value.toUpperCase()">UPPER</button>
         <button onclick="document.getElementById('cb').value = document.getElementById('cb').value.toLowerCase()">lower</button>
