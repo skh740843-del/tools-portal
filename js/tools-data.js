@@ -469,4 +469,117 @@ window.runSha256 = async () => {
   document.getElementById('sha256Out').innerText = hashHex;
 };
 
-const toolsData = [...part1Tools, ...part2Tools, ...part3Tools, ...part4Tools];
+
+const part5Tools = [
+  { id: 'base_conv', name: 'Number Base Converter', cat: 'Calculators', icon: 'fa-binary', desc: 'Convert Binary, Octal, Decimal and Hex', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><input type="text" id="baseVal" value="255" oninput="runBaseConv()"><select id="baseFrom" onchange="runBaseConv()"><option value="10">Decimal (10)</option><option value="2">Binary (2)</option><option value="16">Hex (16)</option><option value="8">Octal (8)</option></select></div><div id="baseOut" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono space-y-1"></div></div>';
+    setTimeout(window.runBaseConv, 50);
+  }},
+  { id: 'sci_eval', name: 'Scientific Math Evaluator', cat: 'Calculators', icon: 'fa-square-root-variable', desc: 'Evaluate sin, cos, tan, log, sqrt, power', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><input type="text" id="sciExp" placeholder="Math.sqrt(144) + Math.sin(30 * Math.PI / 180)" value="Math.sqrt(144) * 5" oninput="runSciEval()"><div class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono">Result: <b id="sciOut" class="text-orange-700">0</b></div></div>';
+    setTimeout(window.runSciEval, 50);
+  }},
+  { id: 'quad_solve', name: 'Quadratic Equation Solver', cat: 'Calculators', icon: 'fa-square-xmark', desc: 'Find roots for ax² + bx + c = 0', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-3 gap-2"><input type="number" id="qA" value="1" placeholder="a"><input type="number" id="qB" value="-5" placeholder="b"><input type="number" id="qC" value="6" placeholder="c"></div><button onclick="runQuadSolve()">Solve Equation</button><div id="quadOut" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono hidden"></div></div>';
+    setTimeout(window.runQuadSolve, 50);
+  }},
+  { id: 'gcd_lcm', name: 'GCD & LCM Calculator', cat: 'Calculators', icon: 'fa-shapes', desc: 'Greatest Common Divisor & Least Common Multiple', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><input type="number" id="numA" value="24" oninput="runGcdLcm()"><input type="number" id="numB" value="36" oninput="runGcdLcm()"></div><div id="gcdLcmOut" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono space-y-1"></div></div>';
+    setTimeout(window.runGcdLcm, 50);
+  }},
+  { id: 'npr_ncr', name: 'nPr & nCr Combinatorics', cat: 'Calculators', icon: 'fa-arrow-down-9-1', desc: 'Permutations, combinations & factorials', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><input type="number" id="nVal" value="5" min="0" oninput="runCombinatorics()"><input type="number" id="rVal" value="2" min="0" oninput="runCombinatorics()"></div><div id="nprNcrOut" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono space-y-1"></div></div>';
+    setTimeout(window.runCombinatorics, 50);
+  }},
+  { id: 'matrix_2x2', name: '2x2 Matrix Determinant', cat: 'Calculators', icon: 'fa-table-cells', desc: 'Determinant and inverse of 2x2 matrix', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2 max-w-[200px] mx-auto"><input type="number" id="mA" value="4"><input type="number" id="mB" value="2"><input type="number" id="mC" value="3"><input type="number" id="mD" value="1"></div><button onclick="runMatrix2x2()">Compute Matrix</button><div id="matOut" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono hidden"></div></div>';
+    setTimeout(window.runMatrix2x2, 50);
+  }}
+];
+
+window.runBaseConv = () => {
+  const v = document.getElementById('baseVal').value.trim();
+  const f = parseInt(document.getElementById('baseFrom').value);
+  const n = parseInt(v, f);
+  const out = document.getElementById('baseOut');
+  if(isNaN(n)) { out.innerHTML = '<span class="text-red-600">Invalid Number Input</span>'; return; }
+  out.innerHTML = `
+    <div>DEC: <b>${n.toString(10)}</b></div>
+    <div>BIN: <b>${n.toString(2)}</b></div>
+    <div>HEX: <b>${n.toString(16).toUpperCase()}</b></div>
+    <div>OCT: <b>${n.toString(8)}</b></div>
+  `;
+};
+
+window.runSciEval = () => {
+  const exp = document.getElementById('sciExp').value;
+  try {
+    const res = Function('"use strict"; return (' + exp + ')')();
+    document.getElementById('sciOut').innerText = Number.isFinite(res) ? res : 'Invalid';
+  } catch(e) { document.getElementById('sciOut').innerText = 'Syntax Error'; }
+};
+
+window.runQuadSolve = () => {
+  const a = parseFloat(document.getElementById('qA').value);
+  const b = parseFloat(document.getElementById('qB').value);
+  const c = parseFloat(document.getElementById('qC').value);
+  const out = document.getElementById('quadOut');
+  if(!a) { out.innerHTML = 'a cannot be 0'; out.classList.remove('hidden'); return; }
+  const d = b * b - 4 * a * c;
+  if(d > 0) {
+    const r1 = ((-b + Math.sqrt(d)) / (2 * a)).toFixed(3);
+    const r2 = ((-b - Math.sqrt(d)) / (2 * a)).toFixed(3);
+    out.innerHTML = `Roots: <b>x₁ = ${r1}</b>, <b>x₂ = ${r2}</b> (Real & Distinct)`;
+  } else if(d === 0) {
+    const r = (-b / (2 * a)).toFixed(3);
+    out.innerHTML = `Root: <b>x = ${r}</b> (Real & Equal)`;
+  } else {
+    const real = (-b / (2 * a)).toFixed(3);
+    const imag = (Math.sqrt(-d) / (2 * a)).toFixed(3);
+    out.innerHTML = `Roots: <b>${real} ± ${imag}i</b> (Complex)`;
+  }
+  out.classList.remove('hidden');
+};
+
+const getGcd = (a, b) => b === 0 ? a : getGcd(b, a % b);
+window.runGcdLcm = () => {
+  const a = Math.abs(parseInt(document.getElementById('numA').value) || 0);
+  const b = Math.abs(parseInt(document.getElementById('numB').value) || 0);
+  if(!a || !b) return;
+  const gcd = getGcd(a, b);
+  const lcm = (a * b) / gcd;
+  document.getElementById('gcdLcmOut').innerHTML = `<div>GCD (HCF): <b>${gcd}</b></div><div>LCM: <b>${lcm}</b></div>`;
+};
+
+const fact = (n) => n <= 1 ? 1 : n * fact(n - 1);
+window.runCombinatorics = () => {
+  const n = parseInt(document.getElementById('nVal').value) || 0;
+  const r = parseInt(document.getElementById('rVal').value) || 0;
+  const out = document.getElementById('nprNcrOut');
+  if(n < 0 || r < 0 || r > n || n > 20) { out.innerHTML = 'Constraint: 0 ≤ r ≤ n ≤ 20'; return; }
+  const nPr = fact(n) / fact(n - r);
+  const nCr = nPr / fact(r);
+  out.innerHTML = `<div>n! (${n}!): <b>${fact(n)}</b></div><div>nPr: <b>${nPr}</b></div><div>nCr: <b>${nCr}</b></div>`;
+};
+
+window.runMatrix2x2 = () => {
+  const a = parseFloat(document.getElementById('mA').value) || 0;
+  const b = parseFloat(document.getElementById('mB').value) || 0;
+  const c = parseFloat(document.getElementById('mC').value) || 0;
+  const d = parseFloat(document.getElementById('mD').value) || 0;
+  const det = (a * d) - (b * c);
+  const out = document.getElementById('matOut');
+  if(det === 0) {
+    out.innerHTML = `Determinant: <b>0</b> (Singular Matrix - No Inverse)`;
+  } else {
+    out.innerHTML = `
+      <div>Det (ad-bc): <b>${det.toFixed(2)}</b></div>
+      <div class="mt-1">Inverse Matrix:</div>
+      <div>[ ${(d/det).toFixed(2)}, ${(-b/det).toFixed(2)} ]</div>
+      <div>[ ${(-c/det).toFixed(2)}, ${(a/det).toFixed(2)} ]</div>
+    `;
+  }
+  out.classList.remove('hidden');
+};
+
+const toolsData = [...part1Tools, ...part2Tools, ...part3Tools, ...part4Tools, ...part5Tools];
