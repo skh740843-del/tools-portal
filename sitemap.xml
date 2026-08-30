@@ -7,303 +7,303 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=emi_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=emi_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=sip_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=sip_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=ci_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=ci_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=fd_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=fd_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=gst_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=gst_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=disc_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=disc_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=salary_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=salary_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=calorie_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=calorie_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=bmr_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=bmr_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=water_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=water_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=bmi_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=bmi_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=age_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=age_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=pomodoro_timer</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=pomodoro_timer</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=stopwatch_tool</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=stopwatch_tool</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=date_diff</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=date_diff</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=tz_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=tz_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=temp_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=temp_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=weight_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=weight_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=speed_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=speed_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=data_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=data_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=img_resizer</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=img_resizer</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=img_to_b64</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=img_to_b64</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=color_picker</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=color_picker</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=meta_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=meta_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=utm_builder</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=utm_builder</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=social_counter</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=social_counter</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=word_count</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=word_count</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=case_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=case_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=dup_remover</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=dup_remover</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=slug_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=slug_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=robots_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=robots_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=hashtag_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=hashtag_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=find_replace</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=find_replace</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=lorem_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=lorem_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=pdf_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=pdf_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=pct_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=pct_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=rand_picker</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=rand_picker</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=bodyfat_calc</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=bodyfat_calc</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=json_format</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=json_format</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=b64_str</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=b64_str</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=url_coder</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=url_coder</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=html_entity</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=html_entity</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=uuid_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=uuid_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=hash_gen</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=hash_gen</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=base_conv</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=base_conv</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=sci_eval</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=sci_eval</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=quad_solve</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=quad_solve</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=gcd_lcm</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=gcd_lcm</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=npr_ncr</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=npr_ncr</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://habitools-live.vercel.app/?tool=matrix_2x2</loc>
+    <loc>https://habitools-live.vercel.app/tool.html?id=matrix_2x2</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 </urlset>

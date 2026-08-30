@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">HabiTools - Online Utility</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    input, select, textarea {
+      width: 100%; border: 1px solid #e7e5e4; border-radius: 0.75rem; padding: 0.65rem 0.9rem;
+      background: #fafaf9; font-size: 0.875rem; outline: none; transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #ea580c; background: #ffffff; }
+    button.tool-btn {
+      width: 100%; background: #ea580c; color: white; font-weight: 700; font-size: 0.875rem;
+      padding: 0.75rem 1rem; border-radius: 0.75rem; transition: background 0.2s;
+    }
+    button.tool-btn:hover { background: #c2410c; }
+  </style>
+</head>
+<body class="bg-[#faf8f5] text-stone-900 min-h-screen">
+
+  <!-- Navbar -->
+  <header class="border-b border-stone-200 bg-white/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5 font-black text-lg text-stone-900">
+        <span class="w-9 h-9 bg-orange-600 text-white flex items-center justify-center rounded-xl shadow-sm text-sm">HT</span>
+        <span>Habi<span class="text-orange-600">Tools</span></span>
+      </a>
+      <a href="/" class="text-xs font-bold text-stone-600 hover:text-orange-600 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-200 hover:border-orange-500 transition-colors">
+        <i class="fa-solid fa-arrow-left"></i> All 50 Tools
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    
+    <!-- Tool Header -->
+    <div class="text-center space-y-2">
+      <span id="toolCategory" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 bg-orange-100 text-orange-800 rounded-full">Utility</span>
+      <h1 id="toolHeading" class="text-2xl sm:text-3xl font-black text-stone-900 pt-1">Loading Tool...</h1>
+      <p id="toolSubtitle" class="text-sm text-stone-500 max-w-xl mx-auto">Instant client-side calculation</p>
+    </div>
+
+    <!-- Interactive Tool Workspace -->
+    <div class="bg-white border border-stone-200 shadow-sm rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto">
+      <div id="toolInteractiveZone"></div>
+    </div>
+
+    <!-- Comprehensive Blog, Guide & FAQs -->
+    <div class="bg-white border border-stone-200 rounded-3xl p-6 sm:p-10 space-y-8 max-w-3xl mx-auto shadow-sm">
+      
+      <!-- In-Depth Blog -->
+      <article class="space-y-4">
+        <div class="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-book-open"></i> Complete Guide & Blog
+        </div>
+        <h2 id="blogTitle" class="text-xl font-black text-stone-900">Comprehensive Insights</h2>
+        <div id="blogContent" class="text-stone-600 text-sm leading-relaxed space-y-3"></div>
+      </article>
+
+      <!-- How to Use Step-by-Step -->
+      <section class="border-t border-stone-100 pt-6 space-y-3">
+        <h3 class="text-base font-bold text-stone-900 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-orange-600"></i> How to Use This Tool
+        </h3>
+        <ol id="howToList" class="list-decimal list-inside text-sm text-stone-600 space-y-2 bg-stone-50 p-5 rounded-2xl border border-stone-200"></ol>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="border-t border-stone-100 pt-6 space-y-4">
+        <h3 class="text-base font-bold text-stone-900 flex items-center gap-2">
+          <i class="fa-solid fa-circle-question text-orange-600"></i> Frequently Asked Questions
+        </h3>
+        <div id="faqContainer" class="space-y-3"></div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="border-t border-stone-200 mt-12 py-6 text-center text-xs text-stone-500">
+    © 2026 HabiTools. All calculations run client-side for 100% privacy and speed.
+  </footer>
+
+  <script src="js/tools-data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const toolId = params.get('id') || 'emi_calc';
+      const t = toolsData.find(x => x.id === toolId) || toolsData[0];
+
+      // ১. পেজ টাইটেল ও হেডার আপডেট
+      document.title = `${t.name} - Free Online Tool | HabiTools`;
+      document.getElementById('toolCategory').innerText = t.cat;
+      document.getElementById('toolHeading').innerText = t.name;
+      document.getElementById('toolSubtitle').innerText = t.desc;
+
+      // ২. টুল রেন্ডার করা
+      const zone = document.getElementById('toolInteractiveZone');
+      t.render(zone);
+
+      // ৩. ডায়নামিক ব্লগ কন্টেন্ট
+      document.getElementById('blogTitle').innerText = `Everything You Need to Know About ${t.name}`;
+      document.getElementById('blogContent').innerHTML = `
+        <p>${t.name} is engineered to deliver fast, highly accurate calculations directly within your browser. Whether you are budgeting finances, converting units, or optimizing web development workflows, this tool removes complex manual computations.</p>
+        <p>Because all operations run client-side in WebAssembly/JavaScript sandboxes, your data is never logged or sent to remote servers, giving you 100% privacy and zero latency.</p>
+      `;
+
+      // ৪. How to use গাইড
+      document.getElementById('howToList').innerHTML = `
+        <li>Enter your required parameters into the input fields above.</li>
+        <li>The output calculates instantly in real-time or upon clicking the action button.</li>
+        <li>Review your results, copy the formatted output, or save values as needed.</li>
+      `;
+
+      // ৫. FAQs
+      document.getElementById('faqContainer').innerHTML = `
+        <div class="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-1">
+          <b class="text-xs text-stone-800">Is this ${t.name} completely free to use?</b>
+          <p class="text-xs text-stone-600">Yes, it is 100% free with unlimited usages and no registration required.</p>
+        </div>
+        <div class="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-1">
+          <b class="text-xs text-stone-800">Is my data secure?</b>
+          <p class="text-xs text-stone-600">Absolutely. All computations occur locally on your machine without storing sensitive information.</p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
