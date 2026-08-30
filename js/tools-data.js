@@ -1,4 +1,11 @@
 const toolsData = [
+  // Social & SEO Marketing
+  { id: "meta_gen", name: "SEO Meta Tag Generator", cat: "Text & Media", icon: "fa-tags", desc: "Generate OpenGraph, SEO & Twitter card meta tags", render: renderMetaGen },
+  { id: "robots_gen", name: "Robots.txt Generator", cat: "Text & Media", icon: "fa-robot", desc: "Create search engine crawler rules for websites", render: renderRobotsGen },
+  { id: "utm_builder", name: "UTM Campaign Builder", cat: "Text & Media", icon: "fa-bullhorn", desc: "Generate Google Analytics tracking campaign URLs", render: renderUtmBuilder },
+  { id: "social_counter", name: "Social Bio & Character Limit", cat: "Text & Media", icon: "fa-hashtag", desc: "Check character limits for X, Instagram, LinkedIn", render: renderSocialCounter },
+  { id: "hashtag_gen", name: "Hashtag Extractor", cat: "Text & Media", icon: "fa-wand-magic-sparkles", desc: "Extract and format clean hashtags from text", render: renderHashtagGen },
+
   // Finance & Business
   { id: "emi_calc", name: "Loan EMI Calculator", cat: "Finance & Tax", icon: "fa-calculator", desc: "Calculate Monthly EMI with breakdown", render: renderEmiCalc },
   { id: "sip_calc", name: "SIP Calculator", cat: "Finance & Tax", icon: "fa-chart-line", desc: "Calculate mutual fund SIP returns", render: renderSipCalc },
@@ -26,7 +33,7 @@ const toolsData = [
   { id: "data_conv", name: "Data Storage Converter", cat: "Calculators", icon: "fa-hard-drive", desc: "Convert MB, GB, TB, KB, Bytes", render: renderDataConv },
   { id: "unit_conv", name: "Length Converter", cat: "Calculators", icon: "fa-ruler-combined", desc: "Convert meters, feet, inches, km", render: renderUnitConv },
 
-  // Text, Content & Daily Utilities
+  // Text & Content Utilities
   { id: "word_count", name: "Word Counter", cat: "Text & Media", icon: "fa-file-lines", desc: "Count words, characters, reading time", render: renderWordCounter },
   { id: "case_conv", name: "Case Converter", cat: "Text & Media", icon: "fa-font", desc: "UPPERCASE, lowercase, Title Case", render: renderCaseConv },
   { id: "dup_remover", name: "Remove Duplicate Lines", cat: "Text & Media", icon: "fa-filter", desc: "Filter out repeating text & list items", render: renderDupRemover },
@@ -36,8 +43,127 @@ const toolsData = [
   { id: "pdf_gen", name: "Text to PDF Export", cat: "Text & Media", icon: "fa-file-pdf", desc: "Export formatted notes directly into PDF", render: renderPdfMaker }
 ];
 
-// === 1. HEALTH & FITNESS ENGINES ===
+// === 1. SOCIAL & SEO ENGINES ===
 
+function renderMetaGen(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div><label>Site / Page Title</label><input type="text" id="metaT" placeholder="e.g. HabiTools - Free Web Utilities" oninput="genMeta()"></div>
+      <div><label>Meta Description</label><textarea id="metaD" placeholder="e.g. 100+ free browser tools for calculation and productivity" oninput="genMeta()" class="h-20"></textarea></div>
+      <div><label>Canonical / Website URL</label><input type="text" id="metaU" placeholder="https://example.com" oninput="genMeta()"></div>
+      <label>Generated HTML Meta Tags</label>
+      <textarea id="metaOut" readonly class="h-28 font-mono text-xs"></textarea>
+    </div>
+  `;
+}
+window.genMeta = () => {
+  const t = document.getElementById('metaT').value || "Title";
+  const d = document.getElementById('metaD').value || "Description";
+  const u = document.getElementById('metaU').value || "https://example.com";
+  document.getElementById('metaOut').value = `<title>${t}</title>\n<meta name="description" content="${d}">\n<meta property="og:title" content="${t}">\n<meta property="og:description" content="${d}">\n<meta property="og:url" content="${u}">\n<meta name="twitter:card" content="summary_large_image">`;
+};
+
+function renderRobotsGen(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div>
+        <label>Allow All Search Engines?</label>
+        <select id="robAllow"><option value="allow">Allow All (Default)</option><option value="disallow">Disallow / Block All</option></select>
+      </div>
+      <div><label>Disallow Path (Optional)</label><input type="text" id="robPath" value="/admin/"></div>
+      <div><label>Sitemap URL</label><input type="text" id="robSite" placeholder="https://example.com/sitemap.xml"></div>
+      <button onclick="genRobots()">Generate Robots.txt</button>
+      <textarea id="robOut" readonly class="h-24 font-mono text-xs"></textarea>
+    </div>
+  `;
+}
+window.genRobots = () => {
+  const a = document.getElementById('robAllow').value;
+  const p = document.getElementById('robPath').value;
+  const s = document.getElementById('robSite').value;
+  let code = `User-agent: *\n`;
+  if (a === 'disallow') code += `Disallow: /\n`;
+  else if (p) code += `Disallow: ${p}\n`;
+  if (s) code += `Sitemap: ${s}\n`;
+  document.getElementById('robOut').value = code;
+};
+
+function renderUtmBuilder(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div><label>Website URL *</label><input type="text" id="utmUrl" placeholder="https://mywebsite.com" oninput="buildUtm()"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Source (e.g. google, facebook)</label><input type="text" id="utmSrc" placeholder="facebook" oninput="buildUtm()"></div>
+        <div><label>Medium (e.g. cpc, banner, bio)</label><input type="text" id="utmMed" placeholder="cpc" oninput="buildUtm()"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Campaign Name</label><input type="text" id="utmCmp" placeholder="summer_sale" oninput="buildUtm()"></div>
+        <div><label>Campaign Term (Keyword)</label><input type="text" id="utmTrm" placeholder="shoes" oninput="buildUtm()"></div>
+      </div>
+      <label>Final Tracking URL</label>
+      <textarea id="utmOut" readonly class="h-20 font-mono text-xs select-all"></textarea>
+    </div>
+  `;
+}
+window.buildUtm = () => {
+  const u = document.getElementById('utmUrl').value.trim();
+  const s = document.getElementById('utmSrc').value.trim();
+  const m = document.getElementById('utmMed').value.trim();
+  const c = document.getElementById('utmCmp').value.trim();
+  const t = document.getElementById('utmTrm').value.trim();
+  if (!u) { document.getElementById('utmOut').value = ""; return; }
+  const params = new URLSearchParams();
+  if (s) params.append('utm_source', s);
+  if (m) params.append('utm_medium', m);
+  if (c) params.append('utm_campaign', c);
+  if (t) params.append('utm_term', t);
+  const q = params.toString();
+  document.getElementById('utmOut').value = q ? `${u}${u.includes('?') ? '&' : '?'}${q}` : u;
+};
+
+function renderSocialCounter(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <textarea id="socTxt" oninput="runSocialCount()" placeholder="Type your social bio or post content here..." class="h-28"></textarea>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>X (Twitter)</div><b id="scX" class="font-mono text-stone-900">280 left</b></div>
+        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>Insta Bio</div><b id="scIg" class="font-mono text-stone-900">150 left</b></div>
+        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>LinkedIn Post</div><b id="scLi" class="font-mono text-stone-900">3000 left</b></div>
+        <div class="p-2.5 bg-stone-50 border border-stone-200 rounded-xl"><div>Total Chars</div><b id="scTot" class="font-mono text-orange-700">0</b></div>
+      </div>
+    </div>
+  `;
+}
+window.runSocialCount = () => {
+  const len = document.getElementById('socTxt').value.length;
+  document.getElementById('scX').innerText = `${280 - len}`;
+  document.getElementById('scIg').innerText = `${150 - len}`;
+  document.getElementById('scLi').innerText = `${3000 - len}`;
+  document.getElementById('scTot').innerText = len;
+};
+
+function renderHashtagGen(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <textarea id="hashIn" placeholder="Paste content with or without hashtags..." class="h-24"></textarea>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="extractHash()">Extract Existing #</button>
+        <button onclick="wordsToHash()">Convert Words to #</button>
+      </div>
+      <textarea id="hashOut" readonly placeholder="Extracted hashtags will appear here..." class="h-24 font-mono text-xs"></textarea>
+    </div>
+  `;
+}
+window.extractHash = () => {
+  const t = document.getElementById('hashIn').value;
+  const matches = t.match(/#[a-zA-Z0-9_]+/g);
+  document.getElementById('hashOut').value = matches ? [...new Set(matches)].join(' ') : "No hashtags found";
+};
+window.wordsToHash = () => {
+  const t = document.getElementById('hashIn').value;
+  const words = t.replace(/[^\w\s]/gi, '').split(/\s+/).filter(w => w.length > 2);
+  document.getElementById('hashOut').value = [...new Set(words)].map(w => '#' + w.toLowerCase()).join(' ');
+};
 function renderCalorieCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
@@ -155,21 +281,13 @@ window.calcBodyFat = () => {
   res.innerText = `Estimated Body Fat: ${fat}%`;
   res.classList.remove('hidden');
 };
-// === 2. CONVERTER ENGINES ===
 
 function renderTempConv(c) {
   c.innerHTML = `
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
         <div><label>Value</label><input type="number" id="tmpV" value="100" oninput="runTemp()"></div>
-        <div>
-          <label>Unit</label>
-          <select id="tmpU" onchange="runTemp()">
-            <option value="c">Celsius (°C)</option>
-            <option value="f">Fahrenheit (°F)</option>
-            <option value="k">Kelvin (K)</option>
-          </select>
-        </div>
+        <div><label>Unit</label><select id="tmpU" onchange="runTemp()"><option value="c">Celsius (°C)</option><option value="f">Fahrenheit (°F)</option><option value="k">Kelvin (K)</option></select></div>
       </div>
       <div id="tmpRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
     </div>
@@ -177,18 +295,13 @@ function renderTempConv(c) {
   setTimeout(runTemp, 50);
 }
 window.runTemp = () => {
-  const v = parseFloat(document.getElementById('tmpV').value);
-  const u = document.getElementById('tmpU').value;
+  const v = parseFloat(document.getElementById('tmpV').value), u = document.getElementById('tmpU').value;
   if (isNaN(v)) return;
   let c = 0, f = 0, k = 0;
   if (u === 'c') { c = v; f = (v * 9/5) + 32; k = v + 273.15; }
   else if (u === 'f') { c = (v - 32) * 5/9; f = v; k = c + 273.15; }
   else { k = v; c = v - 273.15; f = (c * 9/5) + 32; }
-  document.getElementById('tmpRes').innerHTML = `
-    <div>Celsius: <b class="font-mono">${c.toFixed(2)} °C</b></div>
-    <div>Fahrenheit: <b class="font-mono">${f.toFixed(2)} °F</b></div>
-    <div>Kelvin: <b class="font-mono">${k.toFixed(2)} K</b></div>
-  `;
+  document.getElementById('tmpRes').innerHTML = `<div>Celsius: <b>${c.toFixed(2)} °C</b></div><div>Fahrenheit: <b>${f.toFixed(2)} °F</b></div><div>Kelvin: <b>${k.toFixed(2)} K</b></div>`;
 };
 
 function renderWeightConv(c) {
@@ -196,15 +309,7 @@ function renderWeightConv(c) {
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
         <div><label>Weight</label><input type="number" id="wVal" value="1" oninput="runWeight()"></div>
-        <div>
-          <label>Unit</label>
-          <select id="wUnit" onchange="runWeight()">
-            <option value="kg">Kilograms (kg)</option>
-            <option value="lb">Pounds (lbs)</option>
-            <option value="g">Grams (g)</option>
-            <option value="oz">Ounces (oz)</option>
-          </select>
-        </div>
+        <div><label>Unit</label><select id="wUnit" onchange="runWeight()"><option value="kg">Kilograms (kg)</option><option value="lb">Pounds (lbs)</option><option value="g">Grams (g)</option><option value="oz">Ounces (oz)</option></select></div>
       </div>
       <div id="wRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
     </div>
@@ -212,16 +317,10 @@ function renderWeightConv(c) {
   setTimeout(runWeight, 50);
 }
 window.runWeight = () => {
-  const v = parseFloat(document.getElementById('wVal').value);
-  const u = document.getElementById('wUnit').value;
+  const v = parseFloat(document.getElementById('wVal').value), u = document.getElementById('wUnit').value;
   if (isNaN(v)) return;
   let kg = u === 'kg' ? v : u === 'lb' ? v * 0.453592 : u === 'g' ? v / 1000 : v * 0.0283495;
-  document.getElementById('wRes').innerHTML = `
-    <div>Kilograms: <b class="font-mono">${kg.toFixed(3)} kg</b></div>
-    <div>Pounds: <b class="font-mono">${(kg * 2.20462).toFixed(3)} lbs</b></div>
-    <div>Grams: <b class="font-mono">${(kg * 1000).toFixed(1)} g</b></div>
-    <div>Ounces: <b class="font-mono">${(kg * 35.274).toFixed(2)} oz</b></div>
-  `;
+  document.getElementById('wRes').innerHTML = `<div>Kilograms: <b>${kg.toFixed(3)} kg</b></div><div>Pounds: <b>${(kg * 2.20462).toFixed(3)} lbs</b></div>`;
 };
 
 function renderSpeedConv(c) {
@@ -237,15 +336,10 @@ function renderSpeedConv(c) {
   setTimeout(runSpeed, 50);
 }
 window.runSpeed = () => {
-  const v = parseFloat(document.getElementById('spdVal').value);
-  const u = document.getElementById('spdUnit').value;
+  const v = parseFloat(document.getElementById('spdVal').value), u = document.getElementById('spdUnit').value;
   if (isNaN(v)) return;
   let kmh = u === 'kmh' ? v : u === 'mph' ? v * 1.60934 : v * 3.6;
-  document.getElementById('spdRes').innerHTML = `
-    <div>km/h: <b class="font-mono">${kmh.toFixed(2)}</b></div>
-    <div>mph: <b class="font-mono">${(kmh / 1.60934).toFixed(2)}</b></div>
-    <div>m/s: <b class="font-mono">${(kmh / 3.6).toFixed(2)}</b></div>
-  `;
+  document.getElementById('spdRes').innerHTML = `<div>km/h: <b>${kmh.toFixed(2)}</b></div><div>mph: <b>${(kmh / 1.60934).toFixed(2)}</b></div>`;
 };
 
 function renderDataConv(c) {
@@ -253,7 +347,7 @@ function renderDataConv(c) {
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-2">
         <div><label>Storage Size</label><input type="number" id="dtVal" value="1024" oninput="runData()"></div>
-        <div><label>Unit</label><select id="dtUnit" onchange="runData()"><option value="mb">Megabytes (MB)</option><option value="gb">Gigabytes (GB)</option><option value="tb">Terabytes (TB)</option><option value="kb">Kilobytes (KB)</option></select></div>
+        <div><label>Unit</label><select id="dtUnit" onchange="runData()"><option value="mb">Megabytes (MB)</option><option value="gb">Gigabytes (GB)</option><option value="tb">Terabytes (TB)</option></select></div>
       </div>
       <div id="dtRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
     </div>
@@ -261,15 +355,206 @@ function renderDataConv(c) {
   setTimeout(runData, 50);
 }
 window.runData = () => {
-  const v = parseFloat(document.getElementById('dtVal').value);
-  const u = document.getElementById('dtUnit').value;
+  const v = parseFloat(document.getElementById('dtVal').value), u = document.getElementById('dtUnit').value;
   if (isNaN(v)) return;
-  let mb = u === 'mb' ? v : u === 'gb' ? v * 1024 : u === 'tb' ? v * 1024 * 1024 : v / 1024;
-  document.getElementById('dtRes').innerHTML = `
-    <div>Gigabytes (GB): <b class="font-mono">${(mb / 1024).toFixed(3)} GB</b></div>
-    <div>Megabytes (MB): <b class="font-mono">${mb.toFixed(1)} MB</b></div>
-    <div>Kilobytes (KB): <b class="font-mono">${(mb * 1024).toFixed(0)} KB</b></div>
+  let mb = u === 'mb' ? v : u === 'gb' ? v * 1024 : u * 1024 * 1024;
+  document.getElementById('dtRes').innerHTML = `<div>GB: <b>${(mb / 1024).toFixed(3)} GB</b></div><div>MB: <b>${mb.toFixed(1)} MB</b></div>`;
+};
+function renderCalorieCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Gender</label><select id="calGen"><option value="m">Male</option><option value="f">Female</option></select></div>
+        <div><label>Age</label><input type="number" id="calAge" value="25"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Weight (KG)</label><input type="number" id="calW" value="70"></div>
+        <div><label>Height (CM)</label><input type="number" id="calH" value="175"></div>
+      </div>
+      <div>
+        <label>Activity Level</label>
+        <select id="calAct">
+          <option value="1.2">Sedentary (Little/No exercise)</option>
+          <option value="1.375" selected>Lightly active (1-3 days/week)</option>
+          <option value="1.55">Moderately active (3-5 days/week)</option>
+          <option value="1.725">Very active (6-7 days/week)</option>
+        </select>
+      </div>
+      <button onclick="calcCalories()">Calculate Daily Calories</button>
+      <div id="calRes" class="text-xs space-y-1 hidden"></div>
+    </div>
   `;
+}
+window.calcCalories = () => {
+  const g = document.getElementById('calGen').value, a = parseFloat(document.getElementById('calAge').value);
+  const w = parseFloat(document.getElementById('calW').value), h = parseFloat(document.getElementById('calH').value);
+  const act = parseFloat(document.getElementById('calAct').value);
+  if (!a || !w || !h) return;
+  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
+  let tdee = Math.round(bmr * act);
+  const res = document.getElementById('calRes');
+  res.innerHTML = `
+    <div>Maintain Weight: <b class="font-mono text-orange-700">${tdee} kcal/day</b></div>
+    <div>Mild Weight Loss (-0.25kg/w): <b class="font-mono text-emerald-700">${tdee - 250} kcal</b></div>
+    <div>Weight Loss (-0.5kg/w): <b class="font-mono text-blue-700">${tdee - 500} kcal</b></div>
+  `;
+  res.classList.remove('hidden');
+};
+
+function renderBmrCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Gender</label><select id="bmrGen"><option value="m">Male</option><option value="f">Female</option></select></div>
+        <div><label>Age</label><input type="number" id="bmrAge" value="22"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Weight (KG)</label><input type="number" id="bmrW" value="65"></div>
+        <div><label>Height (CM)</label><input type="number" id="bmrH" value="170"></div>
+      </div>
+      <button onclick="calcBmr()">Calculate BMR</button>
+      <div id="bmrRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcBmr = () => {
+  const g = document.getElementById('bmrGen').value, a = parseFloat(document.getElementById('bmrAge').value);
+  const w = parseFloat(document.getElementById('bmrW').value), h = parseFloat(document.getElementById('bmrH').value);
+  if (!a || !w || !h) return;
+  let bmr = g === 'm' ? (10 * w + 6.25 * h - 5 * a + 5) : (10 * w + 6.25 * h - 5 * a - 161);
+  const res = document.getElementById('bmrRes');
+  res.innerText = `Your BMR: ${Math.round(bmr)} Calories/day`;
+  res.classList.remove('hidden');
+};
+
+function renderWaterCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div><label>Your Body Weight (KG)</label><input type="number" id="watW" value="65"></div>
+      <div>
+        <label>Daily Activity</label>
+        <select id="watAct"><option value="0">Normal Desk Work</option><option value="0.5">Moderate Exercise (30-60m)</option><option value="1">Heavy Workout / Athlete</option></select>
+      </div>
+      <button onclick="calcWater()">Calculate Daily Water Goal</button>
+      <div id="watRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcWater = () => {
+  const w = parseFloat(document.getElementById('watW').value);
+  const act = parseFloat(document.getElementById('watAct').value);
+  if (!w) return;
+  const liters = ((w * 0.033) + act).toFixed(2);
+  const glasses = Math.round(liters / 0.25);
+  const res = document.getElementById('watRes');
+  res.innerHTML = `Drink: <b class="text-orange-700">${liters} Liters</b> (~${glasses} Glasses/day)`;
+  res.classList.remove('hidden');
+};
+
+function renderBodyFatCalc(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Gender</label><select id="bfGen"><option value="1">Male</option><option value="0">Female</option></select></div>
+        <div><label>Age</label><input type="number" id="bfAge" value="24"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Weight (KG)</label><input type="number" id="bfW" value="68"></div>
+        <div><label>Height (CM)</label><input type="number" id="bfH" value="172"></div>
+      </div>
+      <button onclick="calcBodyFat()">Estimate Body Fat %</button>
+      <div id="bfRes" class="text-center font-bold text-sm hidden"></div>
+    </div>
+  `;
+}
+window.calcBodyFat = () => {
+  const sex = parseInt(document.getElementById('bfGen').value), age = parseFloat(document.getElementById('bfAge').value);
+  const w = parseFloat(document.getElementById('bfW').value), h = parseFloat(document.getElementById('bfH').value) / 100;
+  if (!age || !w || !h) return;
+  const bmi = w / (h * h);
+  const fat = (1.20 * bmi + 0.23 * age - 10.8 * sex - 5.4).toFixed(1);
+  const res = document.getElementById('bfRes');
+  res.innerText = `Estimated Body Fat: ${fat}%`;
+  res.classList.remove('hidden');
+};
+
+function renderTempConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Value</label><input type="number" id="tmpV" value="100" oninput="runTemp()"></div>
+        <div><label>Unit</label><select id="tmpU" onchange="runTemp()"><option value="c">Celsius (°C)</option><option value="f">Fahrenheit (°F)</option><option value="k">Kelvin (K)</option></select></div>
+      </div>
+      <div id="tmpRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+    </div>
+  `;
+  setTimeout(runTemp, 50);
+}
+window.runTemp = () => {
+  const v = parseFloat(document.getElementById('tmpV').value), u = document.getElementById('tmpU').value;
+  if (isNaN(v)) return;
+  let c = 0, f = 0, k = 0;
+  if (u === 'c') { c = v; f = (v * 9/5) + 32; k = v + 273.15; }
+  else if (u === 'f') { c = (v - 32) * 5/9; f = v; k = c + 273.15; }
+  else { k = v; c = v - 273.15; f = (c * 9/5) + 32; }
+  document.getElementById('tmpRes').innerHTML = `<div>Celsius: <b>${c.toFixed(2)} °C</b></div><div>Fahrenheit: <b>${f.toFixed(2)} °F</b></div><div>Kelvin: <b>${k.toFixed(2)} K</b></div>`;
+};
+
+function renderWeightConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Weight</label><input type="number" id="wVal" value="1" oninput="runWeight()"></div>
+        <div><label>Unit</label><select id="wUnit" onchange="runWeight()"><option value="kg">Kilograms (kg)</option><option value="lb">Pounds (lbs)</option><option value="g">Grams (g)</option><option value="oz">Ounces (oz)</option></select></div>
+      </div>
+      <div id="wRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+    </div>
+  `;
+  setTimeout(runWeight, 50);
+}
+window.runWeight = () => {
+  const v = parseFloat(document.getElementById('wVal').value), u = document.getElementById('wUnit').value;
+  if (isNaN(v)) return;
+  let kg = u === 'kg' ? v : u === 'lb' ? v * 0.453592 : u === 'g' ? v / 1000 : v * 0.0283495;
+  document.getElementById('wRes').innerHTML = `<div>Kilograms: <b>${kg.toFixed(3)} kg</b></div><div>Pounds: <b>${(kg * 2.20462).toFixed(3)} lbs</b></div>`;
+};
+
+function renderSpeedConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Speed</label><input type="number" id="spdVal" value="60" oninput="runSpeed()"></div>
+        <div><label>Unit</label><select id="spdUnit" onchange="runSpeed()"><option value="kmh">km/h</option><option value="mph">mph</option><option value="ms">m/s</option></select></div>
+      </div>
+      <div id="spdRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+    </div>
+  `;
+  setTimeout(runSpeed, 50);
+}
+window.runSpeed = () => {
+  const v = parseFloat(document.getElementById('spdVal').value), u = document.getElementById('spdUnit').value;
+  if (isNaN(v)) return;
+  let kmh = u === 'kmh' ? v : u === 'mph' ? v * 1.60934 : v * 3.6;
+  document.getElementById('spdRes').innerHTML = `<div>km/h: <b>${kmh.toFixed(2)}</b></div><div>mph: <b>${(kmh / 1.60934).toFixed(2)}</b></div>`;
+};
+
+function renderDataConv(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Storage Size</label><input type="number" id="dtVal" value="1024" oninput="runData()"></div>
+        <div><label>Unit</label><select id="dtUnit" onchange="runData()"><option value="mb">Megabytes (MB)</option><option value="gb">Gigabytes (GB)</option><option value="tb">Terabytes (TB)</option></select></div>
+      </div>
+      <div id="dtRes" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-1"></div>
+    </div>
+  `;
+  setTimeout(runData, 50);
+}
+window.runData = () => {
+  const v = parseFloat(document.getElementById('dtVal').value), u = document.getElementById('dtUnit').value;
+  if (isNaN(v)) return;
+  let mb = u === 'mb' ? v : u === 'gb' ? v * 1024 : u * 1024 * 1024;
+  document.getElementById('dtRes').innerHTML = `<div>GB: <b>${(mb / 1024).toFixed(3)} GB</b></div><div>MB: <b>${mb.toFixed(1)} MB</b></div>`;
 };
 function renderDupRemover(c) {
   c.innerHTML = `
@@ -335,7 +620,7 @@ function renderLoremGen(c) {
 }
 window.generateLorem = () => {
   const count = parseInt(document.getElementById('loremParas').value) || 2;
-  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.";
+  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.";
   let res = [];
   for (let i = 0; i < count; i++) res.push(text);
   document.getElementById('loremOut').value = res.join('\n\n');
