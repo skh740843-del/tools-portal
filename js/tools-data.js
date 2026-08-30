@@ -369,4 +369,104 @@ window.calcBodyFat = () => {
   res.classList.remove('hidden');
 };
 
-const toolsData = [...part1Tools, ...part2Tools, ...part3Tools];
+
+const part4Tools = [
+  { id: 'json_format', name: 'JSON Formatter & Validator', cat: 'Developer', icon: 'fa-code', desc: 'Prettify, minify and validate JSON data', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="jsonIn" placeholder="Paste JSON here..." class="h-28 font-mono text-xs"></textarea><div class="grid grid-cols-2 gap-2"><button onclick="formatJson(2)">Prettify (Indent 2)</button><button onclick="minifyJson()">Minify</button></div><div id="jsonStatus" class="text-xs font-bold text-center hidden"></div><textarea id="jsonOut" readonly class="h-28 font-mono text-xs select-all"></textarea></div>';
+  }},
+  { id: 'b64_str', name: 'Base64 Text Encode / Decode', cat: 'Developer', icon: 'fa-lock', desc: 'Encode and decode UTF-8 plain text to Base64', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="b64StrIn" placeholder="Enter text or base64..." class="h-24 font-mono text-xs"></textarea><div class="grid grid-cols-2 gap-2"><button onclick="encB64Str()">Encode Base64</button><button onclick="decB64Str()">Decode Base64</button></div><textarea id="b64StrOut" readonly class="h-24 font-mono text-xs select-all"></textarea></div>';
+  }},
+  { id: 'url_coder', name: 'URL Encoder / Decoder', cat: 'Developer', icon: 'fa-link', desc: 'Encode or decode URI components safely', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="urlCodeIn" placeholder="Enter URL or string..." class="h-24 font-mono text-xs"></textarea><div class="grid grid-cols-2 gap-2"><button onclick="encUrlStr()">Encode URI</button><button onclick="decUrlStr()">Decode URI</button></div><textarea id="urlCodeOut" readonly class="h-24 font-mono text-xs select-all"></textarea></div>';
+  }},
+  { id: 'html_entity', name: 'HTML Entities Converter', cat: 'Developer', icon: 'fa-file-code', desc: 'Escape or unescape HTML tags & characters', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="htmlEntIn" placeholder="Enter HTML snippet..." class="h-24 font-mono text-xs"></textarea><div class="grid grid-cols-2 gap-2"><button onclick="encHtmlEnt()">Escape HTML</button><button onclick="decHtmlEnt()">Unescape HTML</button></div><textarea id="htmlEntOut" readonly class="h-24 font-mono text-xs select-all"></textarea></div>';
+  }},
+  { id: 'uuid_gen', name: 'UUID / GUID Generator', cat: 'Developer', icon: 'fa-fingerprint', desc: 'Generate RFC4122 compliant UUID v4 tokens', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="flex items-center gap-2"><input type="number" id="uuidCount" value="5" min="1" max="50"><button onclick="makeUuids()">Generate UUIDs</button></div><textarea id="uuidOut" readonly class="h-28 font-mono text-xs select-all"></textarea></div>';
+    setTimeout(window.makeUuids, 50);
+  }},
+  { id: 'hash_gen', name: 'SHA-256 Hash Generator', cat: 'Developer', icon: 'fa-shield-halved', desc: 'Generate cryptographic SHA-256 hash', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="hashPlain" placeholder="Enter text to hash..." class="h-24 font-mono text-xs" oninput="runSha256()"></textarea><div class="p-3 bg-stone-50 border border-stone-200 rounded-xl space-y-1 text-xs font-mono"><div class="text-stone-500 font-bold">SHA-256 Output:</div><div id="sha256Out" class="break-all font-bold text-orange-700">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div></div></div>';
+  }}
+];
+
+window.formatJson = (indent) => {
+  const v = document.getElementById('jsonIn').value.trim();
+  const st = document.getElementById('jsonStatus');
+  if(!v) return;
+  try {
+    const parsed = JSON.parse(v);
+    document.getElementById('jsonOut').value = JSON.stringify(parsed, null, indent);
+    st.innerText = 'Valid JSON Syntax';
+    st.className = 'text-xs font-bold text-center text-emerald-600 block';
+  } catch(e) {
+    document.getElementById('jsonOut').value = '';
+    st.innerText = 'Invalid JSON: ' + e.message;
+    st.className = 'text-xs font-bold text-center text-red-600 block';
+  }
+};
+window.minifyJson = () => {
+  const v = document.getElementById('jsonIn').value.trim();
+  const st = document.getElementById('jsonStatus');
+  if(!v) return;
+  try {
+    const parsed = JSON.parse(v);
+    document.getElementById('jsonOut').value = JSON.stringify(parsed);
+    st.innerText = 'Valid JSON (Minified)';
+    st.className = 'text-xs font-bold text-center text-emerald-600 block';
+  } catch(e) {
+    document.getElementById('jsonOut').value = '';
+    st.innerText = 'Invalid JSON: ' + e.message;
+    st.className = 'text-xs font-bold text-center text-red-600 block';
+  }
+};
+window.encB64Str = () => {
+  const v = document.getElementById('b64StrIn').value;
+  try {
+    document.getElementById('b64StrOut').value = btoa(unescape(encodeURIComponent(v)));
+  } catch(e) { alert('Encoding error'); }
+};
+window.decB64Str = () => {
+  const v = document.getElementById('b64StrIn').value.trim();
+  try {
+    document.getElementById('b64StrOut').value = decodeURIComponent(escape(atob(v)));
+  } catch(e) { alert('Invalid Base64 string'); }
+};
+window.encUrlStr = () => {
+  document.getElementById('urlCodeOut').value = encodeURIComponent(document.getElementById('urlCodeIn').value);
+};
+window.decUrlStr = () => {
+  try {
+    document.getElementById('urlCodeOut').value = decodeURIComponent(document.getElementById('urlCodeIn').value);
+  } catch(e) { alert('Malformed URI string'); }
+};
+window.encHtmlEnt = () => {
+  const el = document.createElement('div');
+  el.innerText = document.getElementById('htmlEntIn').value;
+  document.getElementById('htmlEntOut').value = el.innerHTML;
+};
+window.decHtmlEnt = () => {
+  const el = document.createElement('textarea');
+  el.innerHTML = document.getElementById('htmlEntIn').value;
+  document.getElementById('htmlEntOut').value = el.value;
+};
+window.makeUuids = () => {
+  const n = parseInt(document.getElementById('uuidCount').value) || 1;
+  const gen = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+  document.getElementById('uuidOut').value = Array.from({length: Math.min(n, 50)}, gen).join('\n');
+};
+window.runSha256 = async () => {
+  const msg = document.getElementById('hashPlain').value;
+  const msgBuffer = new TextEncoder().encode(msg);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  document.getElementById('sha256Out').innerText = hashHex;
+};
+
+const toolsData = [...part1Tools, ...part2Tools, ...part3Tools, ...part4Tools];
