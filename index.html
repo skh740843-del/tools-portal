@@ -3,119 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HabiTools | Premium Utility Suite</title>
+  <title>HabiTools | Crafted Browser Utilities</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #08090d; }
-    .bg-mesh {
-      background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
-                  radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-                  radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.08) 0px, transparent 60%);
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfbf9; color: #1c1917; }
+    .font-serif-luxury { font-family: 'Instrument Serif', Georgia, serif; }
+    .font-mono-tag { font-family: 'Space Mono', monospace; }
+    .craft-border { border-color: #e7e5e0; }
+    .craft-card { background: #ffffff; border: 1px solid #e7e5e0; transition: all 0.25s ease; }
+    .craft-card:hover { border-color: #c2410c; transform: translateY(-3px); box-shadow: 0 12px 24px -8px rgba(194, 65, 12, 0.08); }
+    .badge-accent { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+
+    /* ALL TOOLS UNIVERSAL INPUT & TEXT FIX (চিরতরে ফিক্স) */
+    #modalBody input, #modalBody textarea, #modalBody select {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 0.75rem !important;
+      font-weight: 600 !important;
+      font-size: 0.875rem !important;
+      padding: 0.75rem !important;
+      outline: none !important;
+      width: 100% !important;
     }
-    .tool-card {
-      background: linear-gradient(180deg, rgba(23, 25, 35, 0.75) 0%, rgba(14, 15, 23, 0.85) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    #modalBody input::placeholder, #modalBody textarea::placeholder {
+      color: #94a3b8 !important;
+      font-weight: 400 !important;
     }
-    .tool-card:hover {
-      border-color: rgba(99, 102, 241, 0.5);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.25);
+    #modalBody input:focus, #modalBody textarea:focus, #modalBody select:focus {
+      background-color: #ffffff !important;
+      border-color: #c2410c !important;
+      box-shadow: 0 0 0 2px rgba(194, 65, 12, 0.15) !important;
     }
-    .hero-glow {
-      text-shadow: 0 0 40px rgba(129, 140, 248, 0.4);
+    #modalBody label {
+      color: #334155 !important;
+      font-weight: 700 !important;
+      font-size: 0.75rem !important;
+      margin-bottom: 0.25rem !important;
+      display: block !important;
     }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: #08090d; }
-    ::-webkit-scrollbar-thumb { background: #262938; border-radius: 4px; }
+    #modalBody button {
+      background-color: #18181b !important;
+      color: #ffffff !important;
+      border-radius: 0.75rem !important;
+      font-weight: 700 !important;
+      font-size: 0.8125rem !important;
+      padding: 0.75rem 1rem !important;
+      transition: all 0.2s ease !important;
+    }
+    #modalBody button:hover {
+      background-color: #27272a !important;
+    }
+    #modalBody div[id$="Res"], #modalBody div[id$="res"] {
+      background-color: #fff7ed !important;
+      border: 1px solid #ffedd5 !important;
+      color: #9a3412 !important;
+      font-weight: 700 !important;
+      padding: 0.75rem !important;
+      border-radius: 0.75rem !important;
+    }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col bg-mesh antialiased">
+<body class="min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white">
 
   <!-- Navbar -->
-  <header class="sticky top-0 z-40 border-b border-white/[0.06] bg-[#08090d]/80 backdrop-blur-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+  <header class="sticky top-0 z-40 bg-[#fcfbf9]/90 backdrop-blur-md border-b craft-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center font-black text-white shadow-lg shadow-indigo-500/30">
-          <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-        </div>
-        <div>
-          <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-1.5">
-            Habi<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">Tools</span>
-            <span class="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold uppercase tracking-wider">Suite</span>
-          </h1>
-          <p class="text-[10px] text-slate-400 font-medium">Fast, Private & 100% Free</p>
-        </div>
+        <div class="w-9 h-9 rounded-lg bg-stone-900 text-white flex items-center justify-center font-bold text-sm">HT</div>
+        <h1 class="text-base font-bold text-stone-900">HABI<span class="text-orange-700">/</span>TOOLS</h1>
       </div>
-      <div class="flex items-center gap-2">
-        <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs text-slate-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="toolCount">0</span> Tools Online
-        </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full badge-accent text-[11px] font-mono-tag font-bold">
+        <span class="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span>
+        <span id="toolCount">0</span> TOOLS ACTIVE
       </div>
     </div>
   </header>
 
   <!-- Hero Header -->
-  <section class="max-w-4xl mx-auto px-4 pt-12 pb-6 text-center">
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-300 mb-5">
-      <i class="fa-solid fa-bolt text-amber-400"></i> Next-Gen Productivity Engine
+  <section class="max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-6 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#f7f5f0] border craft-border rounded-3xl p-6 sm:p-10">
+      <div class="lg:col-span-7 space-y-4">
+        <div class="text-xs font-mono-tag font-bold text-orange-700 uppercase tracking-wider">
+          <span class="w-2.5 h-1 bg-orange-600 inline-block"></span> The Browser Utility Workshop
+        </div>
+        <h2 class="text-4xl sm:text-6xl font-normal text-stone-900 font-serif-luxury leading-[1.05]">
+          Small tools. <br><span class="italic text-orange-700">Serious finish.</span>
+        </h2>
+        <p class="text-stone-600 text-sm max-w-lg">High precision tools for clean calculations, formatting code, PDF exports, and everyday productivity.</p>
+      </div>
+      <div class="lg:col-span-5 grid grid-cols-2 gap-3">
+        <div class="bg-white border craft-border p-5 rounded-2xl"><div class="text-3xl font-bold font-mono-tag">100%</div><div class="text-xs text-stone-500">Client-Side Engine</div></div>
+        <div class="bg-white border craft-border p-5 rounded-2xl"><div class="text-3xl font-bold text-orange-700 font-mono-tag">0s</div><div class="text-xs text-stone-500">No Latency</div></div>
+      </div>
     </div>
-    
-    <h2 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 hero-glow">
-      Ultimate Toolkit for <br class="hidden sm:inline"/>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-400">Everything You Need</span>
-    </h2>
-    <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto mb-8 font-normal">
-      High precision financial calculators, formatters, and smart utilities built directly into your browser.
-    </p>
+  </section>
 
-    <!-- Search Box -->
-    <div class="relative max-w-xl mx-auto mb-6">
-      <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-500"></i>
-      <input type="text" id="toolSearch" onkeyup="filterTools()" placeholder="Search any tool (EMI, GST, Age, QR, Password, UUID)..." 
-        class="w-full pl-11 pr-4 py-3.5 bg-[#12141d] border border-white/10 focus:border-indigo-500 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 transition shadow-2xl text-sm">
+  <!-- Search & Filter -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-8 py-4 w-full">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b craft-border pb-4">
+      <h3 class="text-2xl font-serif-luxury text-stone-900 font-normal">Pick the right tool.</h3>
+      <input type="text" id="toolSearch" onkeyup="filterTools()" placeholder="Search tools (EMI, GST, Age, QR, BMI)..." class="w-full md:w-80 px-4 py-2.5 bg-white border craft-border rounded-xl text-xs outline-none focus:border-orange-600 shadow-sm">
     </div>
-
-    <!-- Category Filter Tabs -->
-    <div class="flex flex-wrap gap-2 justify-center text-xs" id="catFilter">
-      <button onclick="filterCat('all', event)" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold cat-btn shadow-lg shadow-indigo-600/25 transition">All Tools</button>
-      <button onclick="filterCat('Finance & Tax', event)" class="px-4 py-2 rounded-xl bg-[#141622] hover:bg-[#1c1f30] border border-white/[0.06] text-slate-300 cat-btn transition">Finance & Tax</button>
-      <button onclick="filterCat('Calculators', event)" class="px-4 py-2 rounded-xl bg-[#141622] hover:bg-[#1c1f30] border border-white/[0.06] text-slate-300 cat-btn transition">Calculators</button>
-      <button onclick="filterCat('Text & Media', event)" class="px-4 py-2 rounded-xl bg-[#141622] hover:bg-[#1c1f30] border border-white/[0.06] text-slate-300 cat-btn transition">Text & Media</button>
-      <button onclick="filterCat('Developer', event)" class="px-4 py-2 rounded-xl bg-[#141622] hover:bg-[#1c1f30] border border-white/[0.06] text-slate-300 cat-btn transition">Developer</button>
+    <div class="flex flex-wrap gap-2 pt-4 text-xs font-semibold" id="catFilter">
+      <button onclick="filterCat('all', event)" class="px-4 py-2 rounded-lg bg-stone-900 text-white cat-btn">All</button>
+      <button onclick="filterCat('Finance & Tax', event)" class="px-4 py-2 rounded-lg bg-white border craft-border text-stone-700 cat-btn">Finance & Tax</button>
+      <button onclick="filterCat('Calculators', event)" class="px-4 py-2 rounded-lg bg-white border craft-border text-stone-700 cat-btn">Calculators</button>
+      <button onclick="filterCat('Text & Media', event)" class="px-4 py-2 rounded-lg bg-white border craft-border text-stone-700 cat-btn">Text & Media</button>
+      <button onclick="filterCat('Developer', event)" class="px-4 py-2 rounded-lg bg-white border craft-border text-stone-700 cat-btn">Developer</button>
     </div>
   </section>
 
   <!-- Tools Grid -->
-  <main class="max-w-7xl mx-auto px-4 pb-24 flex-grow w-full">
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="toolsGrid"></div>
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pb-20 flex-grow w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="toolsGrid"></div>
   </main>
 
-  <!-- Interactive Modal Engine -->
-  <div id="toolModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-[#11131c] border border-white/10 w-full max-w-lg rounded-3xl p-6 sm:p-7 shadow-2xl relative my-8">
-      <div class="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-5">
-        <div class="flex items-center space-x-3">
-          <div id="modalIconBox" class="w-11 h-11 rounded-2xl flex items-center justify-center text-lg"></div>
-          <div>
-            <h3 id="modalTitle" class="font-bold text-lg text-white">Tool</h3>
-            <p id="modalCat" class="text-[11px] text-slate-400 font-medium"></p>
-          </div>
+  <!-- Modal Engine -->
+  <div id="toolModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border craft-border w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b craft-border pb-4 mb-5">
+        <div>
+          <span id="modalCat" class="text-[10px] font-mono-tag font-bold text-orange-700 uppercase"></span>
+          <h3 id="modalTitle" class="font-serif-luxury text-2xl text-stone-900 font-normal">Tool</h3>
         </div>
-        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 flex items-center justify-center transition text-lg">&times;</button>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition text-lg">&times;</button>
       </div>
-      <div id="modalBody" class="space-y-4 text-sm"></div>
+      <div id="modalBody" class="space-y-4"></div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-white/[0.05] bg-[#06070a] py-6 text-center text-xs text-slate-500">
-    <p>© 2026 <span class="font-bold text-slate-400">HabiTools</span>. Crafted with Speed & Precision.</p>
+  <footer class="border-t craft-border bg-[#f7f5f0] py-6 text-center text-xs text-stone-500">
+    <p>© 2026 <b>HabiTools</b> — Crafted for Serious Productivity.</p>
   </footer>
 
   <script src="js/tools-data.js"></script>
