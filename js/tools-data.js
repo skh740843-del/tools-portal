@@ -294,4 +294,79 @@ window.makeSlug = () => {
   document.getElementById('slugOut').innerText = v.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_-]+/g,'-');
 };
 
-const toolsData = [...part1Tools, ...part2Tools];
+
+const part3Tools = [
+  { id: 'robots_gen', name: 'Robots.txt Generator', cat: 'Text & Media', icon: 'fa-robot', desc: 'Create crawler rules', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><select id="robAllow"><option value="allow">Allow All</option><option value="disallow">Disallow All</option></select><button onclick="genRobots()">Generate</button><textarea id="robOut" readonly class="h-20 font-mono text-xs"></textarea></div>';
+  }},
+  { id: 'hashtag_gen', name: 'Hashtag Extractor', cat: 'Text & Media', icon: 'fa-wand-magic-sparkles', desc: 'Extract clean hashtags', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="hashIn" placeholder="Text..." class="h-24"></textarea><button onclick="wordsToHash()">Generate Hashtags</button><textarea id="hashOut" readonly class="h-24 font-mono text-xs"></textarea></div>';
+  }},
+  { id: 'find_replace', name: 'Find and Replace', cat: 'Text & Media', icon: 'fa-arrows-rotate', desc: 'Find & replace text', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="frText" placeholder="Text..." class="h-20"></textarea><div class="grid grid-cols-2 gap-2"><input type="text" id="frFind" placeholder="Find"><input type="text" id="frReplace" placeholder="Replace"></div><button onclick="doFindReplace()">Replace All</button><textarea id="frOut" readonly class="h-20"></textarea></div>';
+  }},
+  { id: 'lorem_gen', name: 'Lorem Ipsum Generator', cat: 'Text & Media', icon: 'fa-paragraph', desc: 'Placeholder paragraphs', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><input type="number" id="loremParas" value="2" min="1" max="10"><button onclick="generateLorem()">Generate Lorem</button><textarea id="loremOut" readonly class="h-28 text-xs"></textarea></div>';
+  }},
+  { id: 'pdf_gen', name: 'Text to PDF Export', cat: 'Text & Media', icon: 'fa-file-pdf', desc: 'Export formatted notes to PDF', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><textarea id="pt" placeholder="Write text..." class="h-28"></textarea><button onclick="dlPdf()">Export PDF</button></div>';
+  }},
+  { id: 'pct_calc', name: 'Percentage Calculator', cat: 'Calculators', icon: 'fa-divide', desc: 'Find percentage & differences', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><input type="number" id="pVal" placeholder="%"><input type="number" id="pTotal" placeholder="Total"></div><button onclick="calcPct()">Calculate</button><div id="pctRes" class="text-center font-bold text-sm hidden"></div></div>';
+  }},
+  { id: 'rand_picker', name: 'Random Picker', cat: 'Calculators', icon: 'fa-dice', desc: 'Pick random numbers/draw', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><input type="number" id="rMin" value="1"><input type="number" id="rMax" value="100"></div><button onclick="pickRandom()">Pick</button><div id="rPickOut" class="text-center font-mono text-2xl font-black text-orange-700">--</div></div>';
+  }},
+  { id: 'bodyfat_calc', name: 'Body Fat Estimator', cat: 'Calculators', icon: 'fa-person', desc: 'Estimate body fat from BMI', render: (c) => {
+    c.innerHTML = '<div class="space-y-3"><div class="grid grid-cols-2 gap-2"><select id="bfGen"><option value="1">Male</option><option value="0">Female</option></select><input type="number" id="bfAge" value="24"></div><div class="grid grid-cols-2 gap-2"><input type="number" id="bfW" value="68"><input type="number" id="bfH" value="172"></div><button onclick="calcBodyFat()">Estimate</button><div id="bfRes" class="text-center font-bold text-sm hidden"></div></div>';
+  }}
+];
+
+window.genRobots = () => {
+  const a = document.getElementById('robAllow').value;
+  document.getElementById('robOut').value = 'User-agent: *\n' + (a === 'disallow' ? 'Disallow: /\n' : 'Allow: /\n');
+};
+window.wordsToHash = () => {
+  const w = document.getElementById('hashIn').value.replace(/[^\w\s]/gi, '').split(/\s+/).filter(x => x.length > 2);
+  document.getElementById('hashOut').value = [...new Set(w)].map(x => '#' + x.toLowerCase()).join(' ');
+};
+window.doFindReplace = () => {
+  const t = document.getElementById('frText').value, f = document.getElementById('frFind').value, r = document.getElementById('frReplace').value;
+  if(!t || !f) return;
+  document.getElementById('frOut').value = t.replace(new RegExp(f, 'gi'), r);
+};
+window.generateLorem = () => {
+  const count = parseInt(document.getElementById('loremParas').value) || 2;
+  const t = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+  document.getElementById('loremOut').value = Array(count).fill(t).join('\n\n');
+};
+window.dlPdf = () => {
+  const t = document.getElementById('pt').value;
+  if(!t) return;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text(t, 10, 10);
+  doc.save('document.pdf');
+};
+window.calcPct = () => {
+  const v = parseFloat(document.getElementById('pVal').value), t = parseFloat(document.getElementById('pTotal').value);
+  if(isNaN(v) || isNaN(t)) return;
+  const res = document.getElementById('pctRes');
+  res.innerText = v + '% of ' + t + ' = ' + ((v * t) / 100);
+  res.classList.remove('hidden');
+};
+window.pickRandom = () => {
+  const min = parseInt(document.getElementById('rMin').value) || 0, max = parseInt(document.getElementById('rMax').value) || 100;
+  document.getElementById('rPickOut').innerText = Math.floor(Math.random() * (max - min + 1)) + min;
+};
+window.calcBodyFat = () => {
+  const s = parseInt(document.getElementById('bfGen').value), a = parseFloat(document.getElementById('bfAge').value);
+  const w = parseFloat(document.getElementById('bfW').value), h = parseFloat(document.getElementById('bfH').value)/100;
+  if(!a || !w || !h) return;
+  const fat = (1.20 * (w / (h * h)) + 0.23 * a - 10.8 * s - 5.4).toFixed(1);
+  const res = document.getElementById('bfRes');
+  res.innerText = 'Body Fat: ' + fat + '%';
+  res.classList.remove('hidden');
+};
+
+const toolsData = [...part1Tools, ...part2Tools, ...part3Tools];
