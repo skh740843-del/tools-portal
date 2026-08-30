@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Tool Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body { background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
+        header { text-align: center; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; }
+        textarea, input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+        button { background: #2563eb; color: #fff; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛠️ 1000+ Tools Hub</h1>
+        <p>100% Free Client-Side Utility Platform</p>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <h3>📝 Text to PDF</h3>
+            <textarea id="pdfText" rows="4" placeholder="Enter text here..."></textarea>
+            <button onclick="convertToPDF()">Download PDF</button>
+        </div>
+
+        <div class="card">
+            <h3>🎂 Age Calculator</h3>
+            <input type="date" id="dobInput">
+            <button onclick="calcAge()">Calculate Age</button>
+            <p id="ageResult" style="margin-top: 10px; font-weight: bold;"></p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Live Word Counter</h3>
+            <textarea id="wordText" rows="4" oninput="countWords()" placeholder="Type something..."></textarea>
+            <p id="wordResult">Words: 0 | Characters: 0</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
