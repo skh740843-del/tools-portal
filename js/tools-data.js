@@ -1,34 +1,130 @@
 const toolsData = [
   // Finance & Business
-  { id: "emi_calc", name: "Loan EMI Calculator", cat: "Finance & Tax", icon: "fa-calculator", desc: "Calculate Monthly EMI with Principal & Interest breakdown", render: renderEmiCalc },
-  { id: "sip_calc", name: "SIP Investment Calculator", cat: "Finance & Tax", icon: "fa-chart-line", desc: "Calculate mutual fund SIP returns and wealth growth", render: renderSipCalc },
-  { id: "ci_calc", name: "Compound Interest Calculator", cat: "Finance & Tax", icon: "fa-arrow-trend-up", desc: "Compound interest with annual/monthly compounding", render: renderCiCalc },
-  { id: "fd_calc", name: "Fixed Deposit (FD) Calculator", cat: "Finance & Tax", icon: "fa-piggy-bank", desc: "Calculate FD maturity amount and total interest", render: renderFdCalc },
-  { id: "salary_calc", name: "In-Hand Salary Calculator", cat: "Finance & Tax", icon: "fa-wallet", desc: "Calculate monthly take-home salary from annual CTC", render: renderSalaryCalc },
-  { id: "cagr_calc", name: "CAGR Growth Calculator", cat: "Finance & Tax", icon: "fa-chart-pie", desc: "Compound Annual Growth Rate of investments", render: renderCagrCalc },
-  { id: "gst_calc", name: "GST & Tax Calculator", cat: "Finance & Tax", icon: "fa-percent", desc: "Calculate inclusive/exclusive GST with custom rates", render: renderGstCalc },
-  { id: "disc_calc", name: "Discount & Sale Calculator", cat: "Finance & Tax", icon: "fa-tags", desc: "Calculate discount amount and real savings", render: renderDiscountCalc },
+  { id: "emi_calc", name: "Loan EMI Calculator", cat: "Finance & Tax", icon: "fa-calculator", desc: "Calculate Monthly EMI with breakdown", render: renderEmiCalc },
+  { id: "sip_calc", name: "SIP Calculator", cat: "Finance & Tax", icon: "fa-chart-line", desc: "Calculate mutual fund SIP returns", render: renderSipCalc },
+  { id: "ci_calc", name: "Compound Interest", cat: "Finance & Tax", icon: "fa-arrow-trend-up", desc: "Compound interest with annual rates", render: renderCiCalc },
+  { id: "fd_calc", name: "Fixed Deposit (FD)", cat: "Finance & Tax", icon: "fa-piggy-bank", desc: "Calculate FD maturity and interest", render: renderFdCalc },
+  { id: "salary_calc", name: "In-Hand Salary", cat: "Finance & Tax", icon: "fa-wallet", desc: "Calculate monthly take-home pay", render: renderSalaryCalc },
+  { id: "cagr_calc", name: "CAGR Growth", cat: "Finance & Tax", icon: "fa-chart-pie", desc: "Compound Annual Growth Rate", render: renderCagrCalc },
+  { id: "gst_calc", name: "GST Calculator", cat: "Finance & Tax", icon: "fa-percent", desc: "Calculate inclusive/exclusive GST", render: renderGstCalc },
+  { id: "disc_calc", name: "Discount Calculator", cat: "Finance & Tax", icon: "fa-tags", desc: "Calculate discount and savings", render: renderDiscountCalc },
 
-  // Calculators & Math
-  { id: "pct_calc", name: "Percentage Calculator", cat: "Calculators", icon: "fa-divide", desc: "Find percentage, increases, and differences", render: renderPctCalc },
-  { id: "age_calc", name: "Exact Age Calculator", cat: "Calculators", icon: "fa-calendar-days", desc: "Exact age in years, months, and days", render: renderAgeCalc },
-  { id: "bmi_calc", name: "BMI & Health Calculator", cat: "Calculators", icon: "fa-weight-scale", desc: "Body Mass Index & weight category", render: renderBmiCalc },
-  { id: "unit_conv", name: "Unit & Length Converter", cat: "Calculators", icon: "fa-ruler-combined", desc: "Convert meters, feet, inches, kilometers", render: renderUnitConv },
+  // Calculators & Health
+  { id: "pct_calc", name: "Percentage Calculator", cat: "Calculators", icon: "fa-divide", desc: "Find percentage and differences", render: renderPctCalc },
+  { id: "age_calc", name: "Exact Age Calculator", cat: "Calculators", icon: "fa-calendar-days", desc: "Exact age in years, months, days", render: renderAgeCalc },
+  { id: "bmi_calc", name: "BMI Calculator", cat: "Calculators", icon: "fa-weight-scale", desc: "Body Mass Index & weight category", render: renderBmiCalc },
+  { id: "unit_conv", name: "Unit Converter", cat: "Calculators", icon: "fa-ruler-combined", desc: "Convert meters, feet, inches, km", render: renderUnitConv },
 
-  // Text & Media
-  { id: "word_count", name: "Word Counter", cat: "Text & Media", icon: "fa-file-lines", desc: "Count words, characters, and reading time", render: renderWordCounter },
-  { id: "case_conv", name: "Text Case Converter", cat: "Text & Media", icon: "fa-font", desc: "UPPERCASE, lowercase, Title Case", render: renderCaseConv },
-  { id: "pdf_gen", name: "Quick Text to PDF", cat: "Text & Media", icon: "fa-file-pdf", desc: "Export formatted notes directly into PDF", render: renderPdfMaker },
-
-  // Developer Utilities
-  { id: "qr_gen", name: "Custom QR Code Generator", cat: "Developer", icon: "fa-qrcode", desc: "High-resolution scannable QR codes", render: renderQrGen },
-  { id: "base64_tool", name: "Base64 Tool", cat: "Developer", icon: "fa-code", desc: "Encode or decode Base64 data", render: renderBase64Tool },
-  { id: "uuid_gen", name: "UUID v4 Generator", cat: "Developer", icon: "fa-fingerprint", desc: "Generate cryptographically secure UUID v4", render: renderUuidGen },
-  { id: "pass_gen", name: "Password Generator", cat: "Developer", icon: "fa-key", desc: "Create ultra-secure random passwords", render: renderPassGen }
+  // Text, Content & Daily Utilities
+  { id: "word_count", name: "Word Counter", cat: "Text & Media", icon: "fa-file-lines", desc: "Count words, characters, reading time", render: renderWordCounter },
+  { id: "case_conv", name: "Case Converter", cat: "Text & Media", icon: "fa-font", desc: "UPPERCASE, lowercase, Title Case", render: renderCaseConv },
+  { id: "dup_remover", name: "Remove Duplicate Lines", cat: "Text & Media", icon: "fa-filter", desc: "Filter out repeating text & list items", render: renderDupRemover },
+  { id: "slug_gen", name: "Text to Slug URL", cat: "Text & Media", icon: "fa-link", desc: "Convert post titles to SEO URL slugs", render: renderSlugGen },
+  { id: "find_replace", name: "Find and Replace", cat: "Text & Media", icon: "fa-arrows-rotate", desc: "Quickly find words and replace in text", render: renderFindReplace },
+  { id: "lorem_gen", name: "Lorem Ipsum Generator", cat: "Text & Media", icon: "fa-paragraph", desc: "Generate placeholder dummy paragraphs", render: renderLoremGen },
+  { id: "pdf_gen", name: "Text to PDF Export", cat: "Text & Media", icon: "fa-file-pdf", desc: "Export formatted notes directly into PDF", render: renderPdfMaker },
+  { id: "rand_picker", name: "Random Number / Draw", cat: "Calculators", icon: "fa-dice", desc: "Pick random numbers or winner draw", render: renderRandomPicker }
 ];
 
-// === 1. INVESTMENT & FINANCE ENGINES ===
+// === 1. TEXT, CONTENT & DAILY UTILITIES ===
 
+function renderDupRemover(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <textarea id="dupIn" placeholder="Paste your list or lines with duplicates..." class="h-28"></textarea>
+      <button onclick="cleanDuplicates()">Remove Duplicate Lines</button>
+      <textarea id="dupOut" readonly placeholder="Clean unique lines will appear here..." class="h-28 font-mono"></textarea>
+    </div>
+  `;
+}
+window.cleanDuplicates = () => {
+  const val = document.getElementById('dupIn').value;
+  if (!val) return;
+  const lines = val.split('\n');
+  const unique = [...new Set(lines.map(l => l.trim()))].filter(l => l.length > 0);
+  document.getElementById('dupOut').value = unique.join('\n');
+};
+
+function renderSlugGen(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <input type="text" id="slugIn" placeholder="e.g. My Amazing Blog Post Title 2026!" oninput="makeSlug()">
+      <div class="p-3 bg-stone-50 border border-stone-200 rounded-xl">
+        <label class="text-[10px] text-stone-500 uppercase">Generated URL Slug</label>
+        <div id="slugOut" class="font-mono text-orange-700 font-bold text-sm select-all">slug-will-appear-here</div>
+      </div>
+    </div>
+  `;
+}
+window.makeSlug = () => {
+  const v = document.getElementById('slugIn').value;
+  const slug = v.toLowerCase().trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  document.getElementById('slugOut').innerText = slug || "slug-will-appear-here";
+};
+
+function renderFindReplace(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <textarea id="frText" placeholder="Paste original text here..." class="h-24"></textarea>
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" id="frFind" placeholder="Find word...">
+        <input type="text" id="frReplace" placeholder="Replace with...">
+      </div>
+      <button onclick="doFindReplace()">Replace All</button>
+      <textarea id="frOut" readonly placeholder="Updated text..." class="h-24"></textarea>
+    </div>
+  `;
+}
+window.doFindReplace = () => {
+  const t = document.getElementById('frText').value;
+  const f = document.getElementById('frFind').value;
+  const r = document.getElementById('frReplace').value;
+  if (!t || !f) return;
+  const regex = new RegExp(f, 'gi');
+  document.getElementById('frOut').value = t.replace(regex, r);
+};
+
+function renderLoremGen(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="flex items-center gap-3">
+        <input type="number" id="loremParas" value="2" min="1" max="10" class="w-20 text-center font-bold">
+        <span class="text-xs text-stone-500 font-semibold">Paragraphs</span>
+      </div>
+      <button onclick="generateLorem()">Generate Lorem Ipsum</button>
+      <textarea id="loremOut" readonly class="h-32 text-xs"></textarea>
+    </div>
+  `;
+}
+window.generateLorem = () => {
+  const count = parseInt(document.getElementById('loremParas').value) || 2;
+  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+  let res = [];
+  for (let i = 0; i < count; i++) res.push(text);
+  document.getElementById('loremOut').value = res.join('\n\n');
+};
+
+function renderRandomPicker(c) {
+  c.innerHTML = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Min Value</label><input type="number" id="rMin" value="1"></div>
+        <div><label>Max Value</label><input type="number" id="rMax" value="100"></div>
+      </div>
+      <button onclick="pickRandom()">Generate Random Number</button>
+      <div id="rPickOut" class="text-center font-mono text-2xl font-black text-orange-700 p-3 bg-orange-50 border border-orange-200 rounded-xl">--</div>
+    </div>
+  `;
+}
+window.pickRandom = () => {
+  const min = parseInt(document.getElementById('rMin').value) || 0;
+  const max = parseInt(document.getElementById('rMax').value) || 100;
+  const num = Math.floor(Math.random() * (max - min + 1)) + min;
+  document.getElementById('rPickOut').innerText = num;
+};
 function renderSipCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
@@ -116,7 +212,7 @@ function renderSalaryCalc(c) {
       <div><label>Annual CTC (₹)</label><input type="number" id="ctcAmt" value="600000" oninput="runSalary()"></div>
       <div class="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2 mt-4">
         <div class="flex justify-between text-xs"><span>Estimated In-Hand (Monthly):</span><b id="salMonth" class="font-mono text-orange-700 text-base">₹ 0</b></div>
-        <div class="flex justify-between text-xs text-stone-500"><span>Estimated EPF + Deductions:</span><b id="salDed" class="font-mono">₹ 0</b></div>
+        <div class="flex justify-between text-xs text-stone-500"><span>Estimated Deductions:</span><b id="salDed" class="font-mono">₹ 0</b></div>
       </div>
     </div>
   `;
@@ -154,6 +250,7 @@ window.calcCagr = () => {
   res.innerText = `CAGR Growth Rate: ${cagr}% per year`;
   res.classList.remove('hidden');
 };
+
 function renderEmiCalc(c) {
   c.innerHTML = `
     <div class="space-y-3">
@@ -342,59 +439,4 @@ window.dlPdf = () => {
   const doc = new jsPDF();
   doc.text(t, 10, 10);
   doc.save("document.pdf");
-};
-
-function renderQrGen(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <input type="text" id="qt" placeholder="URL or text...">
-      <button onclick="makeQr()">Generate QR Code</button>
-      <div id="qBox" class="p-3 bg-white rounded-xl hidden w-fit mx-auto"></div>
-    </div>
-  `;
-}
-window.makeQr = () => {
-  const v = document.getElementById('qt').value;
-  if (!v) return;
-  const b = document.getElementById('qBox');
-  b.innerHTML = "";
-  b.classList.remove('hidden');
-  new QRCode(b, { text: v, width: 130, height: 130 });
-};
-
-function renderBase64Tool(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <textarea id="bt" placeholder="Text..." class="h-16"></textarea>
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="document.getElementById('bo').value = btoa(document.getElementById('bt').value)">Encode</button>
-        <button onclick="try{document.getElementById('bo').value = atob(document.getElementById('bt').value)}catch(e){alert('Invalid')}">Decode</button>
-      </div>
-      <textarea id="bo" readonly placeholder="Output..." class="h-16 font-mono"></textarea>
-    </div>
-  `;
-}
-
-function renderUuidGen(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <div id="uo" class="text-center font-mono text-sm font-bold">-</div>
-      <button onclick="document.getElementById('uo').innerText = crypto.randomUUID()">Generate UUID</button>
-    </div>
-  `;
-}
-
-function renderPassGen(c) {
-  c.innerHTML = `
-    <div class="space-y-3">
-      <button onclick="genP()">Generate 16-char Password</button>
-      <input type="text" id="po" readonly class="text-center font-mono font-bold">
-    </div>
-  `;
-}
-window.genP = () => {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=";
-  let res = "";
-  for (let i = 0; i < 16; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-  document.getElementById('po').value = res;
 };
